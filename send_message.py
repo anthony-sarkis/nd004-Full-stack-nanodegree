@@ -1,7 +1,7 @@
 from twilio.rest import TwilioRestClient
 
 account_sid = "ACbda06cd22d1458cede5c2ad4d7b55670" # Your Account SID from www.twilio.com/console
-auth_token  = "28775eb64fc34b723fe68043ec5b7906"  # Your Auth Token from www.twilio.com/console
+auth_token  = "insert"  # Your Auth Token from www.twilio.com/console
 
 client = TwilioRestClient(account_sid, auth_token)
 
