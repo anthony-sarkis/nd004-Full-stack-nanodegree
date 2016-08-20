@@ -35,10 +35,13 @@ main_page_head = '''
             width: 100%;
             height: 100%;
         }
+
         .movie-tile {
             margin-bottom: 20px;
             padding-top: 20px;
+            height: 515px;
         }
+
         .movie-tile:hover {
             background-color: #EEE;
             cursor: pointer;
@@ -56,6 +59,31 @@ main_page_head = '''
             top: 0;
             background-color: white;
         }
+       .columns {
+            -webkit-column-count: 3;
+            -webkit-column-gap: 10px;
+            -webkit-column-fill: auto;
+
+            -moz-column-count: 3;
+            -moz-column-gap: 10px;
+            -moz-column-fill: auto;
+
+            column-count: 3;   
+            column-gap: 15px;
+            column-fill: auto;
+        }
+
+        .tiles {
+            display: inline-block;
+
+
+            -webkit-column-break-inside: avoid;
+            -moz-column-break-inside: avoid;
+            column-break-inside: avoid;
+
+            padding: 10px;
+        }
+        
     </style>
     <script type="text/javascript" charset="utf-8">
         // Pause the video when the modal is closed
@@ -112,7 +140,7 @@ main_page_content = '''
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container columns">
       {movie_tiles}
     </div>
   </body>
@@ -122,9 +150,10 @@ main_page_content = '''
 
 # A single movie entry html template
 movie_tile_content = '''
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
     <img src="{poster_image_url}" width="220" height="342">
-    <h2>{movie_title}</h2>
+    <h2>{movie_title}</h2
+    <p>{movie_storyline}</p>
 </div>
 '''
 
@@ -145,7 +174,8 @@ def create_movie_tiles_content(movies):
         content += movie_tile_content.format(
             movie_title=movie.title,
             poster_image_url=movie.poster_image_url,
-            trailer_youtube_id=trailer_youtube_id
+            trailer_youtube_id=trailer_youtube_id,
+            movie_storyline=movie.storyline
         )
     return content
 

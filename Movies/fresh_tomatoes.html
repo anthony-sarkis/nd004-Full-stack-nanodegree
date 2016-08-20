@@ -29,10 +29,13 @@
             width: 100%;
             height: 100%;
         }
+
         .movie-tile {
             margin-bottom: 20px;
             padding-top: 20px;
+            height: 515px;
         }
+
         .movie-tile:hover {
             background-color: #EEE;
             cursor: pointer;
@@ -50,6 +53,31 @@
             top: 0;
             background-color: white;
         }
+       .columns {
+            -webkit-column-count: 3;
+            -webkit-column-gap: 10px;
+            -webkit-column-fill: auto;
+
+            -moz-column-count: 3;
+            -moz-column-gap: 10px;
+            -moz-column-fill: auto;
+
+            column-count: 3;   
+            column-gap: 15px;
+            column-fill: auto;
+        }
+
+        .tiles {
+            display: inline-block;
+
+
+            -webkit-column-break-inside: avoid;
+            -moz-column-break-inside: avoid;
+            column-break-inside: avoid;
+
+            padding: 10px;
+        }
+        
     </style>
     <script type="text/javascript" charset="utf-8">
         // Pause the video when the modal is closed
@@ -102,36 +130,42 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container columns">
       
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="KYz2wyBy3kc" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="KYz2wyBy3kc" data-toggle="modal" data-target="#trailer">
     <img src="http://cdn.collider.com/wp-content/uploads/toy-story-poster1.jpg" width="220" height="342">
-    <h2>Toy Story</h2>
+    <h2>Toy Story</h2
+    <p>A story of a boy and his toys that come to life</p>
 </div>
 
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="5PSNL1qE6VY" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="5PSNL1qE6VY" data-toggle="modal" data-target="#trailer">
     <img src="http://www.foxmovies.com/movies/avatar/download-poster/251" width="220" height="342">
-    <h2>Avatar</h2>
+    <h2>Avatar</h2
+    <p>A  marine dispatched to the moon Pandora on a unique mission becomes torn between his orders and protecting the world he feels is his home.</p>
 </div>
 
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="vKQi3bBA1y8" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="vKQi3bBA1y8" data-toggle="modal" data-target="#trailer">
     <img src="http://www.impawards.com/1999/posters/matrix_ver1.jpg" width="220" height="342">
-    <h2>The Matrix</h2>
+    <h2>The Matrix</h2
+    <p>A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.</p>
 </div>
 
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="Pki6jbSbXIY" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="Pki6jbSbXIY" data-toggle="modal" data-target="#trailer">
     <img src="https://www.movieposter.com/posters/archive/main/7/MPW-3576" width="220" height="342">
-    <h2>Lord of the Rings</h2>
+    <h2>Lord of the Rings</h2
+    <p>The future of civilization rests in the fate of the One Ring</p>
 </div>
 
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="T7A810duHvw" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="T7A810duHvw" data-toggle="modal" data-target="#trailer">
     <img src="http://www.impawards.com/intl/uk/2013/posters/about_time.jpg" width="220" height="342">
-    <h2>About Time</h2>
+    <h2>About Time</h2
+    <p>At the age of 21, Tim discovers he can travel in time and change what happens and has happened in his own life.</p>
 </div>
 
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="_mucMCddPy0" data-toggle="modal" data-target="#trailer">
+<div class="tiles movie-tile text-center" data-trailer-youtube-id="_mucMCddPy0" data-toggle="modal" data-target="#trailer">
     <img src="http://media.theiapolis.com/d4/h1AK/i1O4J/k4/l1OIT/wW8/stargate-film-poster.jpg" width="220" height="342">
-    <h2>Stargate</h2>
+    <h2>Stargate</h2
+    <p>An interstellar teleportation device, leads to a planet with humans resembling ancient Egyptians who worship the god Ra.</p>
 </div>
 
     </div>
