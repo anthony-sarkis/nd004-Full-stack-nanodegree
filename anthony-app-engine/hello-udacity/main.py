@@ -16,34 +16,96 @@
 #
 import webapp2
 
+def valid_day(day):
+    if day.isdigit() is True:
+        day = int(day)
+        if day >= 1 and day <= 31:
+            return day
+
+import string
+months = ['January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December']
+
+def valid_month(month):
+    month = string.capitalize(month)
+    if month in months:
+        return month
+
+def valid_year(year):
+    if year.isdigit() is True:
+        year = int(year)
+        if 1900 <= year <= 2020:
+            return year
+
 form="""
-<form method="get" action="/">
-  <label>
-      pie
-      <input type="radio" name="q" value = "one" > Male
-  </label>
-  apple <input type="radio" name="q" value = "two" checked> Female
-  <input type="radio" name="q" value = "three" > Dog
-  <br>
-  <select name="q">
-    <option value="lemon pie"> three </option>
-    <option> two </option>
-    </select>
-  <input type="submit">
+<form method="post">
+    What is your birthday?
+    <br>
+
+    <label>
+      Day
+      <input type="textbox" name="Day" value="%(day)s">
+    </label>
+
+    <label>
+      Month
+      <input type="textbox" name="Month" value="%(month)s">
+    </label>
+
+    <label>
+      Year
+      <input type="textbox" name="Year" value="%(year)s">
+    </label>
+
+    <div style="color: red">
+    %(error)s
+    </div>
+
+    <br>
+    <input type="submit">
 </form>
 """
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write(form)
 
-class TestHandler(webapp2.RequestHandler):
+class MainHandler(webapp2.RequestHandler):
+    def write_form(self, error="", day="", month="", year=""):
+        self.response.out.write(form % {"error": error,
+                                        "day": day,
+                                        "month": month,
+                                        "year": year})
+    def get(self):
+        self.write_form()
+
     def post(self):
-        q = self.request.get("q")
-        self.response.out.write(q)
-        #self.response.headers['Content-Type'] = 'text/plain'
-        #self.response.out.write(self.request)
+        user_day = self.request.get("Day")
+        user_month = self.request.get("Month")
+        user_year = self.request.get("Year")
+
+        #so we can represent both Valid vars and what the user entered
+        day = valid_day(user_day)
+        month = valid_month(user_month)
+        year = valid_year(user_year)
+
+        if not (day and month and year):
+            self.write_form("That doesn't look right",
+                            user_day, user_month, user_year)
+        else:
+            self.redirect("/thanks")
+
+class ThanksHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.out.write("Thanks! That's a totally valid day!")
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/testform', TestHandler)],
+    ('/thanks', ThanksHandler)],
     debug=True)
