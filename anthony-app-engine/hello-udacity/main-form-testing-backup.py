@@ -17,18 +17,8 @@
 import webapp2
 
 form="""
-<form method="get" action="/">
-  <label>
-      pie
-      <input type="radio" name="q" value = "one" > Male
-  </label>
-  apple <input type="radio" name="q" value = "two" checked> Female
-  <input type="radio" name="q" value = "three" > Dog
-  <br>
-  <select name="q">
-    <option value="lemon pie"> three </option>
-    <option> two </option>
-    </select>
+<form method="post" action="/testform">
+  <input name="q">
   <input type="submit">
 </form>
 """
