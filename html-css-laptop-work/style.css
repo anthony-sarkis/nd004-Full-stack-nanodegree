@@ -3,8 +3,7 @@
 
 .title {
   background-color: #33BEBE;
-  color: whit
-  e;
+  color: white;
   padding-bottom: 25px;
 }
 
@@ -26,3 +25,4 @@
   display: -webkit-flex;
   display: flex;
 }
+
