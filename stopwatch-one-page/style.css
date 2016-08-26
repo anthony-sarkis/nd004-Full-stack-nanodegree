@@ -1,0 +1,26 @@
+
+.container {
+  display: -webkit-flex;
+  display: flex;
+}
+
+#t1, #t2, #t3, #t4, #t5, #t6 {
+  color: white;
+  text-align: center;
+  font-size: 300%;
+}
+
+#t1bg, #t2bg, #t3bg, #t4bg, #t5bg, #t6bg {
+  background-color: #0f9d58;
+  margin: 10px;
+}
+
+.image {
+  padding: 10px;
+}
+
+.form {
+  padding: 10px;
+  text-align: center;
+  padding-bottom: 500px;
+}
