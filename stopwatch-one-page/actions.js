@@ -126,7 +126,7 @@ Timer.prototype.count = function() {
         that.timerLabel.style.color = "white";
       }
 
-      else if (that.time > 200) {
+      else if (that.time > 300) {
         that.bg.style.backgroundColor = "yellow";
         that.timerLabel.style.color = "black";
       }
