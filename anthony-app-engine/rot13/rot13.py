@@ -2,6 +2,8 @@
 import os
 import webapp2
 import jinja2
+import re
+from string import letters
 
 from google.appengine.ext import db
 
@@ -10,9 +12,11 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
 class Handler(webapp2.RequestHandler):
+    # Create a template for "write" function
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
+    # Create a template for rending a string
     def render_str(self, template, **params):
         t = jinja_env.get_template(template)
         return t.render(params)
@@ -20,43 +24,23 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-class Art(db.Model):
-    title = db.StringProperty(required = True)
-    art = db.TextProperty(required = True)
-    create = db.DateTimeProperty(auto_now_add = True)
+class Rot13(Handler):
+	""" Converts text into Ro13 """
+	def get(self):
+		# renders html form if get method is called
+		self.render('rot13-form-custom.html')
 
-class MainHandler(Handler):
-    def render_front(self, title="", art="", error=""):
-        arts = db.GqlQuery("SELECT * FROM Art "
-                            "ORDER BY create DESC")
+	def post(self):
+		Rot13 = ''
+		text = self.request.get('text')
+		# encode and decode text using built in rot13 functions 
+		if text:
+			rot13 = text.encode('rot13')
 
-        self.render("front.html", title=title, art=art, error=error, arts=arts)
-
-    def get(self):
-        self.render_front()
-
-    def post(self):
-        title = self.request.get("title")
-        art = self.request.get("art")
-
-        #error handling
-        #status 200 ok
-        if title and art:
-            #new instance of art
-            a = Art(title = title, art = art)
-            #store instance in db
-            a.put()
-
-            #rediect to avoid reload message 
-            self.redirect("/")
-            #self.write("thanks!")
-
-        #error
-        else:
-            error = "we need both a title and some artwork!"
-            #self.render("front.html", error = error)
-            self.render_front(title, art, error)
+		# render HTML form and pass rot13 encoded text to text varilable
+		self.render('rot13-form-custom.html', text = rot13)
+		
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
+    ('/', Rot13),
 ], debug=True)
