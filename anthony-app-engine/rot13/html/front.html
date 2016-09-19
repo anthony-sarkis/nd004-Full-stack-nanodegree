@@ -1,0 +1,13 @@
+
+{% extends "base.html"%}
+<!-- Extend HTML from base html template -->
+
+{% block content%}
+
+	<!-- Render posts (var p) with html declared as safe -->
+	{% for p in posts %}
+		{{ p.render() | safe }}
+		<br><br>
+	{% endfor %}	
+
+{% endblock %}

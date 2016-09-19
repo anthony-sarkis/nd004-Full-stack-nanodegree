@@ -11,6 +11,11 @@ template_dir = os.path.join(os.path.dirname(__file__), "html")
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
+def render_str(template, **params):
+    t = jinja_env.get_template(template)
+    return t.render(params)
+
+
 class Handler(webapp2.RequestHandler):
     # Create a template for "write" function
     def write(self, *a, **kw):
@@ -23,6 +28,82 @@ class Handler(webapp2.RequestHandler):
 
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
+
+
+# Blog section   ###############
+# TODO Comment this code.
+
+def render_post(response, post):
+    response.out.write('<b>' + post.subject + '</b><br>')
+    response.out.write(post.content)
+
+def blog_key(name = 'default'):
+    return db.Key.from_path('blogs', name)
+
+class Post(db.Model):
+    subject = db.StringProperty(required = True)
+    content = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+    last_modified = db.DateTimeProperty(auto_now = True)
+
+    def render(self):
+        self._render_text = self.content.replace('\n', '<br>')
+        return render_str("post.html", p = self)
+
+# render all posts blog front page
+class BlogFront(Handler):
+    def get(self):
+        # Get posts from DB. Select all from Post table order by created
+        posts = db.GqlQuery("select * from Post order by created desc limit 10")
+        # Render front page, pass "posts" variable as posts
+        self.render('front.html', posts = posts)
+
+# Render a specific post
+class PostPage(Handler):
+    def get(self, post_id):
+        # Create key. Find post from post_id
+        # Call int to transform string from URL into integer post ID
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        # Look up a specific item in the db using key
+        post = db.get(key)
+
+        # Return error if no valid key
+        if not post:
+            self.error(404)
+            return
+
+        # Render page using Permalink HTML as a template, pass post var as post
+        self.render("permalink.html", post = post)
+
+# Handle new post
+class NewPost(Handler):
+    """ TODO describe me """
+    
+    # Render new post HTML
+    def get(self):
+        self.render("newpost.html")
+
+    # On Post render
+    def post(self):
+        # Get variables passed from form
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+
+        # Handle if valid post
+        if subject and content:
+            # Create new post as p variable
+            p = Post(parent = blog_key(), subject=subject, content=content)
+            # Store element (p) in database
+            p.put()
+            # Redirect to blog page using ID of element
+            self.redirect('/blog/%s' % str(p.key().id()))
+
+        # Error handling if invalid post
+        else:
+            # Define error message to user
+            error = "Subject and Content please :)"
+            # Render HTML page with variables passed
+            self.render("newpost.html", subject=subject, content=content, error=error)
 
 class Rot13(Handler):
 	""" Converts text into Ro13 """
@@ -115,4 +196,8 @@ app = webapp2.WSGIApplication([
     ('/', Rot13),
     ('/signup', Signup),
     ('/welcome', Welcome),
+    ('/blog/?', BlogFront),
+    # Pass parameter into post page handler "+" means 1 or more numbers
+    ('/blog/([0-9]+)', PostPage),
+    ('/blog/newpost', NewPost),
 ], debug=True)
