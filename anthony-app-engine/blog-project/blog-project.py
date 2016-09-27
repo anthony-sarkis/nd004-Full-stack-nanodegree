@@ -3,14 +3,14 @@ import os
 import webapp2
 import jinja2
 import re
-from string import letters
 import hashlib
 import hmac
 import string
 import random
-
+from string import letters
 from google.appengine.ext import db
 
+# Define HTML template directory, load templates using Jinja
 template_dir = os.path.join(os.path.dirname(__file__), "html")
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
@@ -20,28 +20,31 @@ def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
 
-# Hashing and password functions ##############
+# #################### Hashing and password functions
 
 # normally would not store in this file
 SECRET = 'imsosecret'
+
+# call hmac passing secret phrase and phrase variable
 def hash_str(s):
-    # call hmac passing secret phrase and phrase variable
     x = hmac.new(SECRET,s).hexdigest()
     return x
 
+# Return string with hash and value
 def make_secure_val(s):
     return "%s|%s" % (s, hash_str(s))
 
-def check_secure_val(h):
+# Check if cookie hash value equals real hash
+def check_secure_val(h): 
     x = h.split('|')[0]
     if make_secure_val(x) == h:
         return x
 
+# Salt for password hash 
 def make_salt():
     return ''.join(random.choice(string.letters) for x in xrange(5))
 
 # Make password hash
-# assign salt to default to None
 def make_pw_hash(name, pw, salt = None):
     if not salt:
         salt = make_salt()
@@ -60,7 +63,7 @@ def valid_pw(name, pw, h):
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
 
-# Call data store object
+# Class for Users
 class User(db.Model):
     # set parameters
     name = db.StringProperty(required = True)
@@ -92,14 +95,16 @@ class User(db.Model):
 
     @classmethod
     def login(cls, name, pw):
+        # Calls class method by name pass name
         u = cls.by_name(name)
+        # check if user has valid password
         if u and valid_pw(name, pw, u.pw_hash):
             return u
 
 
 ###############################
 
-
+# Primary handler
 class Handler(webapp2.RequestHandler):
     # Create a template for "write" function
     def write(self, *a, **kw):
@@ -113,19 +118,21 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-    # cals make secure val, and sets cookie
+    # calls make secure val, and sets cookie
     def set_secure_cookie(self, name, val):
         cookie_val = make_secure_val(val)
         self.response.headers.add_header(
             'Set-Cookie',
             '%s=%s; Path=/' % (name, cookie_val))
 
+    # Request and verify cookie for user id
     def read_secure_cookie(self, name):
         # get cookie value
         cookie_val = self.request.cookies.get(name)
         # return value if it's secure?
         return cookie_val and check_secure_val(cookie_val)
 
+    # Login user by setting a secure cookie, passing user ID
     def login(self, user):
         self.set_secure_cookie('user_id', str(user.key().id()))
 
@@ -133,47 +140,18 @@ class Handler(webapp2.RequestHandler):
     def logout(self):
         self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
 
-    # Check if user logged in or not for user cookie, stores user object?
-    # Helps keep track on every page?
+    # Runs on every request to see if user is logged in or not.
     def initialize(self, *a, **kw):
             webapp2.RequestHandler.initialize(self, *a, **kw)
             uid = self.read_secure_cookie('user_id')
             self.user = uid and User.by_id(int(uid))
 
-# Cookies
-
-class Cookies(Handler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
-        visits = 0
-        # starting point for cookie string function
-        visits_cookie_str = self.request.cookies.get('visits')
-        # validate cookie str
-        if visits_cookie_str:
-            # pass visits cookie string to check secure value function
-            # secure value function is implemented above
-            cookie_val = check_secure_val(visits_cookie_str)
-            if cookie_val:
-                visits = int(cookie_val)
-
-        # increment visits by 1, this is valid as visits are reset to 0 if hash invalid
-        visits += 1
-
-        # pass visits to make secure value to return as string?
-        new_cookie_val = make_secure_val(str(visits))
-
-        # set cookie based on visits
-        self.response.headers.add_header('Set-Cookie', 'visits=%s' % new_cookie_val)
-
-        # inform user how many times they have been to the site based on the cookie
-        self.write("You've been here %s times!" % visits)
-
-# End Cookies section
-
-
+    def getUserID(self):
+        x = self.read_secure_cookie('user_id')
+        x = int(x.split('|')[0])
+        return x 
 
 # Blog section   ###############
-# TODO Comment this code.
 
 def render_post(response, post):
     response.out.write('<b>' + post.subject + '</b><br>')
@@ -182,23 +160,27 @@ def render_post(response, post):
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs', name)
 
-class Post(db.Model):
-    subject = db.StringProperty(required = True)
-    content = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-    last_modified = db.DateTimeProperty(auto_now = True)
-
-    def render(self):
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p = self)
-
 # render all posts blog front page
 class BlogFront(Handler):
     def get(self):
         # Get posts from DB. Select all from Post table order by created
-        posts = db.GqlQuery("select * from Post order by created desc limit 10")
+        posts = greetings = Post.all().order('-created')
         # Render front page, pass "posts" variable as posts
         self.render('front.html', posts = posts)
+
+# Class for post creation
+class Post(db.Model):
+    subject = db.StringProperty(required = True)
+    content = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+    # Used to assign a post to a user
+    created_by = db.IntegerProperty(required = True)
+    last_modified = db.DateTimeProperty(auto_now = True)
+
+    def render(self):
+        # Replace line break with html <br> to render well
+        self._render_text = self.content.replace('\n', '<br>')
+        return render_str("post.html", p = self)
 
 # Render a specific post
 class PostPage(Handler):
@@ -219,8 +201,7 @@ class PostPage(Handler):
 
 # Handle new post
 class NewPost(Handler):
-    """ TODO describe me """
-    
+    """ """
     # Render new post HTML
     def get(self):
         self.render("newpost.html")
@@ -230,11 +211,13 @@ class NewPost(Handler):
         # Get variables passed from form
         subject = self.request.get('subject')
         content = self.request.get('content')
+        # assign post to a user using getUserbyID method
+        created_by = self.getUserID()
 
         # Handle if valid post
         if subject and content:
             # Create new post as p variable
-            p = Post(parent = blog_key(), subject=subject, content=content)
+            p = Post(parent = blog_key(), subject=subject, content=content, created_by=created_by)
             # Store element (p) in database
             p.put()
             # Redirect to blog page using ID of element
@@ -247,69 +230,87 @@ class NewPost(Handler):
             # Render HTML page with variables passed
             self.render("newpost.html", subject=subject, content=content, error=error)
 
-class Rot13(Handler):
-	""" Converts text into Ro13 """
-	def get(self):
-		# renders html form if get method is called
-		self.render('rot13-form-custom.html')
+#### NEW  ############ INCOMPLETE as of 9/27
 
-	def post(self):
-		Rot13 = ''
-		text = self.request.get('text')
-		# encode and decode text using built in rot13 functions 
-		if text:
-			rot13 = text.encode('rot13')
+class EditPost(Handler):
+    def get(self, post_id):
+        # Create key. Find post from post_id
+        # Call int to transform string from URL into integer post ID
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        # Look up a specific item in the db using key
+        post = db.get(key)
+        ### Need to figure out right way to access POST datastore attributes.
+        content = self.post.content
+        subject = self.post.subject
 
-		# render HTML form and pass rot13 encoded text to text varilable
-		self.render('rot13-form-custom.html', text = rot13)
-		
+        # Return error if no valid key
+        if not post:
+            self.error(404)
+            return
+
+        # Render page using Permalink HTML as a template, pass post var as post
+        self.render("editpost.html", content=content, subject=subject)
+
+    def post(self):
+        # Get variables passed from form
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+        key = self.post.blog_key
+        # assign post to a user using getUserbyID method
+        created_by = self.getUserID()
+
+        # Handle if valid post
+        if subject and content:
+            # Create new post as p variable
+            p = Post(blog_key=key, subject=subject, content=content, created_by=created_by)
+            # Store element (p) in database
+            p.put()
+            # Redirect to blog page using ID of element
+            self.redirect('/blog/%s' % str(p.key().id()))
+
+        # Error handling if invalid post
+        else:
+            # Define error message to user
+            error = "Subject and Content please :)"
+            # Render HTML page with variables passed
+            self.render("editpost.html", subject=subject, content=content, error=error)
+########### INCOMPLETE as of 9/27
+	
+
 # Define error handling functions
-
 # Allow a-z, A-Z, 0-0, _, - using regular expression
 # 3 - 20 characters
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
     return username and USER_RE.match(username)
-
 # Check password
 PASS_RE = re.compile(r"^.{3,20}$")
 def valid_password(password):
     return password and PASS_RE.match(password)
-
 # Check email
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
     return email and EMAIL_RE.match(email)
+################
 
-# Render welcome page if user has valid username, else redirect to signup
-class NewWelcome(Handler):
+
+# Displays welcome page if valid user
+class Welcome(Handler):
     def get(self):
         if self.user:
+            # Calling class function to look up username by name
             self.render('welcome.html', username = self.user.name)
         else:
             self.redirect('/signup')
 
-class Welcome(Handler):
-    def get(self):
-        # Get username so we can use it as local var
-        username = self.request.get('username')
-        if valid_username(username):
-            self.render('welcome.html', username = username)
-        else:
-            self.redirect('/signup')
-
 class Signup(Handler):
-
     # Render basic html page
     def get(self):
         self.render("blog-sign-up-form.html")
-
-    # Post logic
+    # 
     def post(self):
         # have_error var is used to determine if we should redirect or not
         have_error = False
-
-        # get all vars (now calling self???)
         self.username = self.request.get('username')
         self.password = self.request.get('password')
         self.verify = self.request.get('verify')
@@ -344,11 +345,7 @@ class Signup(Handler):
     def done(self, *a, **kw):
         raise NotImplementedError
 
-# remove this section?
-class Unit2Signup(Signup):
-    def done(self):
-        self.redirect('/welcome?username=' + self.username)
-
+# Register calling signup class
 class Register(Signup):
     def done(self):
         # make sure the user doesn't already exist
@@ -361,7 +358,18 @@ class Register(Signup):
             u.put()
 
             self.login(u)
-            self.redirect('/blog')
+            self.redirect('/welcome')
+
+""" 
+Login control flow
+
+1. Get's username and password from form
+2. Creates a varible "u" using class method User.login
+    2.1 User.login calls @ClassMethod by_name, which filters all users where name = user
+    2.2 Runs valid_pw to check if password hash is valid, returns u if so
+3. Calls self.login method pass "u" variable
+    3.1 This sets a secure cookie.
+"""
 
 class Login(Handler):
     def get(self):
@@ -371,10 +379,10 @@ class Login(Handler):
         username = self.request.get('username')
         password = self.request.get('password')
 
-        u = User.login(username,password)
+        u = User.login(username, password)
         if u:
             self.login(u)
-            self.redirect('/blog')
+            self.redirect('/welcome')
         else:
             msg = "Invalid login"
             self.render('login-form.html', error = msg)
@@ -382,19 +390,17 @@ class Login(Handler):
 class Logout(Handler):
     def get(self):
         self.logout()
-        self.redirect('/welcome')
+        self.redirect('/signup')
 
 app = webapp2.WSGIApplication([
-    ('/', Rot13),
+    ('/', Register),
     ('/signup', Register),
     ('/welcome', Welcome),
     ('/blog/?', BlogFront),
-    # Pass parameter into post page handler "+" means 1 or more numbers
     ('/blog/([0-9]+)', PostPage),
     ('/blog/newpost', NewPost),
-    ('/cookies', Cookies),
     ('/login', Login),
     ('/logout', Logout),
-    ('/NewWelcome', NewWelcome),
+    ('/edit/([0-9]+)', EditPost),
     ],
     debug=True)
