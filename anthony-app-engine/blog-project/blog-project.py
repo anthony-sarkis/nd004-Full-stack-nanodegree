@@ -63,7 +63,9 @@ def valid_pw(name, pw, h):
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
 
-# Class for Users
+##################
+
+# Class for Users ### USERS USERS 
 class User(db.Model):
     # set parameters
     name = db.StringProperty(required = True)
@@ -104,7 +106,8 @@ class User(db.Model):
 
 ###############################
 
-# Primary handler
+
+# Primary handler to help with general functions
 class Handler(webapp2.RequestHandler):
     # Create a template for "write" function
     def write(self, *a, **kw):
@@ -146,10 +149,29 @@ class Handler(webapp2.RequestHandler):
             uid = self.read_secure_cookie('user_id')
             self.user = uid and User.by_id(int(uid))
 
+    # Use to get a user ID from cookies to see who is making the post.
     def getUserID(self):
+        # Is this right?
         x = self.read_secure_cookie('user_id')
-        x = int(x.split('|')[0])
-        return x 
+        # return if cookie is blank, otherwise return value
+        if not x == '':
+            x = int(x.split('|')[0])
+            return x
+
+# Class for posts
+class Post(db.Model):
+    subject = db.StringProperty(required = True)
+    content = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+    # Used to assign a post to a user
+    created_by = db.IntegerProperty(required = True)
+    last_modified = db.DateTimeProperty(auto_now = True)
+
+    def render(self):
+        # Replace line break with html <br> to render well
+        self._render_text = self.content.replace('\n', '<br>')
+        return render_str("post.html", p = self)
+
 
 # Blog section   ###############
 
@@ -167,20 +189,6 @@ class BlogFront(Handler):
         posts = greetings = Post.all().order('-created')
         # Render front page, pass "posts" variable as posts
         self.render('front.html', posts = posts)
-
-# Class for post creation
-class Post(db.Model):
-    subject = db.StringProperty(required = True)
-    content = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-    # Used to assign a post to a user
-    created_by = db.IntegerProperty(required = True)
-    last_modified = db.DateTimeProperty(auto_now = True)
-
-    def render(self):
-        # Replace line break with html <br> to render well
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p = self)
 
 # Render a specific post
 class PostPage(Handler):
@@ -230,7 +238,9 @@ class NewPost(Handler):
             # Render HTML page with variables passed
             self.render("newpost.html", subject=subject, content=content, error=error)
 
+
 #### NEW  ############ INCOMPLETE as of 9/27
+# Method to edit posts 
 
 class EditPost(Handler):
     def get(self, post_id):
@@ -239,9 +249,9 @@ class EditPost(Handler):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         # Look up a specific item in the db using key
         post = db.get(key)
-        ### Need to figure out right way to access POST datastore attributes.
-        content = self.post.content
-        subject = self.post.subject
+        # Now that we have the correct "post" we can call properties of it
+        content = post.content
+        subject = post.subject
 
         # Return error if no valid key
         if not post:
@@ -251,33 +261,55 @@ class EditPost(Handler):
         # Render page using Permalink HTML as a template, pass post var as post
         self.render("editpost.html", content=content, subject=subject)
 
-    def post(self):
+    def post(self, post_id):
         # Get variables passed from form
         subject = self.request.get('subject')
-        content = self.request.get('content')
-        key = self.post.blog_key
-        # assign post to a user using getUserbyID method
-        created_by = self.getUserID()
+        content = self.request.get('content')  
+        # get from URL path the post key 
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        created_by_edit = self.getUserID()
+        created_by_actual = post.created_by
 
-        # Handle if valid post
-        if subject and content:
-            # Create new post as p variable
-            p = Post(blog_key=key, subject=subject, content=content, created_by=created_by)
-            # Store element (p) in database
-            p.put()
-            # Redirect to blog page using ID of element
-            self.redirect('/blog/%s' % str(p.key().id()))
+        # Check permissions. If the same user trying to edit it is the one who created it
+        if created_by_actual == created_by_edit:
 
-        # Error handling if invalid post
+            # Handle if valid post
+            if subject and content:
+                # Update the post
+                # passes the key as the key so it overwrites old post
+                p = Post(key=key, parent = blog_key(), subject=subject, content=content, created_by=created_by_actual)
+                # Store element (p) in database
+                p.put()
+                # Redirect to blog page using ID of element
+                self.redirect('/blog/%s' % str(p.key().id()))
+
+            # Error handling if invalid post
+            else:
+                # Define error message to user
+                error = "Subject and Content please :)"
+                # Render HTML page with variables passed
+                self.render("editpost.html", subject=subject, content=content, error=error)
+        # Error handling if user is not logged in
         else:
-            # Define error message to user
-            error = "Subject and Content please :)"
+            error = "Please login"
             # Render HTML page with variables passed
             self.render("editpost.html", subject=subject, content=content, error=error)
-########### INCOMPLETE as of 9/27
-	
 
-# Define error handling functions
+########### INCOMPLETE as of 9/27
+
+# Delete a post
+# Shuold this be a function not a class?
+class DeletePost(Handler):
+    def get(self, post_id):
+        # get from URL path the post key 
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        post.delete()
+
+########### INCOMPLETE as of 9/27
+
+# Define error handling functions for user creation
 # Allow a-z, A-Z, 0-0, _, - using regular expression
 # 3 - 20 characters
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
@@ -303,14 +335,16 @@ class Welcome(Handler):
         else:
             self.redirect('/signup')
 
+# Sign up class
 class Signup(Handler):
     # Render basic html page
     def get(self):
         self.render("blog-sign-up-form.html")
-    # 
+    # primary data handler method
     def post(self):
         # have_error var is used to determine if we should redirect or not
         have_error = False
+        # pass html properties
         self.username = self.request.get('username')
         self.password = self.request.get('password')
         self.verify = self.request.get('verify')
@@ -345,7 +379,7 @@ class Signup(Handler):
     def done(self, *a, **kw):
         raise NotImplementedError
 
-# Register calling signup class
+# Registers a new user and logs them in. Handles errors by redireting.
 class Register(Signup):
     def done(self):
         # make sure the user doesn't already exist
@@ -387,6 +421,7 @@ class Login(Handler):
             msg = "Invalid login"
             self.render('login-form.html', error = msg)
 
+# Logs out a user by clearing their cookies
 class Logout(Handler):
     def get(self):
         self.logout()
@@ -402,5 +437,6 @@ app = webapp2.WSGIApplication([
     ('/login', Login),
     ('/logout', Logout),
     ('/edit/([0-9]+)', EditPost),
+    ('/delete/([0-9]+)', DeletePost),
     ],
     debug=True)
