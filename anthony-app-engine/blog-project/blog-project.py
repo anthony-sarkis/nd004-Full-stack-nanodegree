@@ -172,12 +172,26 @@ class Post(db.Model):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)
 
+# Class for Likes
+class Like(db.Model):
+    like = db.BooleanProperty(required = True)
+    created_by = db.IntegerProperty(required = True)
+    #linked_post = db.IntegerProperty(required = True)
+
+class Comment(db.Model):
+    comment = db.TextProperty(required = True)
+    author = db.IntegerProperty(required = True)
+    #linked_post = db.IntegerProperty(required = True)
 
 # Blog section   ###############
 
-def render_post(response, post):
+# Remove line breaks for smooth post rendering
+def render_post(response, post, comment):
     response.out.write('<b>' + post.subject + '</b><br>')
     response.out.write(post.content)
+    # TODO handling for displaying comments on posts
+    response.out.write(comment.comment)
+
 
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs', name)
@@ -207,12 +221,67 @@ class PostPage(Handler):
         # Render page using Permalink HTML as a template, pass post var as post
         self.render("permalink.html", post = post)
 
+## new Commment handler
+class NewComment(Handler):
+    def get(self, post_id):
+
+    # Get post ID to link to commment
+        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(post_key)
+        if not post:
+            self.error(404)
+            return
+
+        comment_author = self.getUserID()
+        post_author = post.created_by
+        # Permissions, options could set here for editing
+        if self.user:
+                self.render("newcomment.html", post=post)
+        else:
+            error = "Please login to post"
+            self.redirect('/login?error=' + error)
+
+    # On Post render
+    def post(self, post_id):
+        # Get variables passed from form
+        comment = self.request.get('comment')
+        # assign post to a user using getUserbyID method
+        author = self.getUserID()
+        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(post_key)
+
+        # Handle if valid post
+        if comment:
+            # Create new post as p variable
+            c = Comment(parent=post, comment=comment, author=author)
+            # Store element (p) in database
+            c.put()
+            # Redirect to blog page using ID of element
+            self.redirect('/blog/%s' % str(post.key().id()))
+
+        # Error handling if invalid post
+        else:
+            # Define error message to user
+            error = "Please write a comment"
+            # Render HTML page with variables passed
+            self.render("newcomment.html", post=post, error=error, comment=comment)
+
+#### WORKING 10/14/16
+
+### Edit Comment Handler
+#class EditComment(Handler):
+    #def get(self, post_id, comment_id):
+
 # Handle new post
 class NewPost(Handler):
     """ """
     # Render new post HTML
     def get(self):
-        self.render("newpost.html")
+        if self.user:
+            self.render("newpost.html")
+        else:
+            error = "Please login to post"
+            self.redirect('/login?error=' + error)
 
     # On Post render
     def post(self):
@@ -249,37 +318,51 @@ class EditPost(Handler):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         # Look up a specific item in the db using key
         post = db.get(key)
-        # Now that we have the correct "post" we can call properties of it
-        content = post.content
-        subject = post.subject
-
         # Return error if no valid key
+        # !Important much come before content call
         if not post:
             self.error(404)
             return
 
+        # Now that we have the correct "post" we can call properties of it
+        content = post.content
+        subject = post.subject
+
+        # WORKING working on getting correct Like entity to allow user to edit like...?
+        #like_key = db.GqlQuery("select __key__ WHERE __key__ HAS PARENT KEY(Post, key)")
+        #like = db.get(like_key)
+        #like_bool = like.like
         # Render page using Permalink HTML as a template, pass post var as post
         self.render("editpost.html", content=content, subject=subject)
 
     def post(self, post_id):
         # Get variables passed from form
         subject = self.request.get('subject')
-        content = self.request.get('content')  
+        content = self.request.get('content')
+        # LIKE
+        #like_bool = self.request.get('like_bool') 
+        #if like_bool == "checked":
+            #like_bool = True
+        #else:
+            #like_bool = False
+
         # get from URL path the post key 
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
+    
+        # Check permissions. If the same user trying to edit it is the one who created it
         created_by_edit = self.getUserID()
         created_by_actual = post.created_by
-
-        # Check permissions. If the same user trying to edit it is the one who created it
         if created_by_actual == created_by_edit:
 
             # Handle if valid post
             if subject and content:
                 # Update the post
                 # passes the key as the key so it overwrites old post
-                p = Post(key=key, parent = blog_key(), subject=subject, content=content, created_by=created_by_actual)
+                #l = Like(parent=post, like=like_bool, created_by=created_by_actual)
+                p = Post(key=key, parent=blog_key(), subject=subject, content=content, created_by=created_by_actual)
                 # Store element (p) in database
+                #l.put()
                 p.put()
                 # Redirect to blog page using ID of element
                 self.redirect('/blog/%s' % str(p.key().id()))
@@ -290,11 +373,10 @@ class EditPost(Handler):
                 error = "Subject and Content please :)"
                 # Render HTML page with variables passed
                 self.render("editpost.html", subject=subject, content=content, error=error)
-        # Error handling if user is not logged in
+        # Error handling if correct user is not logged in
         else:
-            error = "Please login"
-            # Render HTML page with variables passed
-            self.render("editpost.html", subject=subject, content=content, error=error)
+            error = "Please login to edit"
+            self.redirect('/login?error=' + error)
 
 ########### INCOMPLETE as of 9/27
 
@@ -302,11 +384,54 @@ class EditPost(Handler):
 # Shuold this be a function not a class?
 class DeletePost(Handler):
     def get(self, post_id):
+        # Create key. Find post from post_id
+        # Call int to transform string from URL into integer post ID
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        # Look up a specific item in the db using key
+        post = db.get(key)
+        # Return error if no valid key
+        # !Important much come before content call
+        if not post:
+            self.error(404)
+            return
+
+        # Now that we have the correct "post" we can call properties of it
+        content = post.content
+        subject = post.subject
+
+        created_by_edit = self.getUserID()
+        created_by_actual = post.created_by
+
+        if created_by_actual == created_by_edit:
+            self.render("deletepost.html", content=content, subject=subject)
+            ## TODO   Undo function?
+        # Error handling if not valid user
+        # TODO Redirect to login page, then redirect back to delete page automatically
+        else:
+            error = "Please login to delete"
+            self.redirect('/login?error=' + error)
+
+    def post(self, post_id):
         # get from URL path the post key 
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-        post.delete()
 
+        # Permissions
+        created_by_edit = self.getUserID()
+        created_by_actual = post.created_by
+        # If valid user, delete post and show success message
+        if created_by_actual == created_by_edit:
+            post.delete()
+            self.redirect('/deletesuccess')
+        # Error handling if not valid user
+        # TODO Redirect to login page, then redirect back to delete page automatically
+        else:
+            error = "Please login to delete"
+            self.redirect('/login?error=' + error)
+
+class DeleteSuccess(Handler):
+    def get(self):
+        self.render("deletesuccess.html")
 ########### INCOMPLETE as of 9/27
 
 # Define error handling functions for user creation
@@ -407,7 +532,8 @@ Login control flow
 
 class Login(Handler):
     def get(self):
-        self.render('login-form.html')
+        error = self.request.get('error')
+        self.render('login-form.html', error=error)
 
     def post(self):
         username = self.request.get('username')
@@ -438,5 +564,7 @@ app = webapp2.WSGIApplication([
     ('/logout', Logout),
     ('/edit/([0-9]+)', EditPost),
     ('/delete/([0-9]+)', DeletePost),
+    ('/deletesuccess', DeleteSuccess),
+    ('/newcomment/([0-9]+)', NewComment),
     ],
     debug=True)

@@ -4,7 +4,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Edit post</h2>
+  <h2>Delete post</h2>
 
     <form method="post">
       <label>
@@ -17,9 +17,8 @@
         <textarea name="content">{{content}}</textarea>
       </label>
 
-      <input type="checkbox" name="like" value="like" {{like_bool}}>
       <div class="error">{{error}}</div>
 
-      <input type="submit" value="Update Post">
+      <input type="submit" value="Delete Post">
     </form>
 {% endblock %}
