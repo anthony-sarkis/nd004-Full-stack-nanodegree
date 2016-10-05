@@ -190,7 +190,9 @@ def render_post(response, post, comment):
     response.out.write('<b>' + post.subject + '</b><br>')
     response.out.write(post.content)
     # TODO handling for displaying comments on posts
-    response.out.write(comment.comment)
+    # Not yet complete. response.out.write(comment.comment)  This is not quite right but something similar.
+    # comments = Comment.all().filter('Parent =', post).get()
+    # response.out.write(comments)
 
 
 def blog_key(name = 'default'):
@@ -238,7 +240,7 @@ class NewComment(Handler):
         if self.user:
                 self.render("newcomment.html", post=post)
         else:
-            error = "Please login to post"
+            error = "Please login to comment"
             self.redirect('/login?error=' + error)
 
     # On Post render
@@ -269,8 +271,57 @@ class NewComment(Handler):
 #### WORKING 10/14/16
 
 ### Edit Comment Handler
-#class EditComment(Handler):
-    #def get(self, post_id, comment_id):
+class EditComment(Handler):
+    def get(self, post_id, comment_id):
+        # Get post ID to link to commment
+        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(post_key)
+        if not post:
+            self.error(404)
+            return
+
+        comment_author = self.getUserID()
+        post_author = post.created_by
+
+        # Get comment key from second path
+        comment_key = db.Key.from_path('Comment', int(comment_id), parent=post_key)
+        comment = db.get(comment_key)
+        # Access the comment itself from the comment class
+        original_comment = comment.comment
+
+        # Permissions, options could set here for editing
+        if self.user:
+                self.render("editcomment.html", post=post, comment=original_comment)
+        else:
+            error = "Please login to comment"
+            self.redirect('/login?error=' + error)
+
+    def post(self, post_id, comment_id):
+        # Get variables passed from form
+        comment = self.request.get('comment')
+        # assign post to a user using getUserbyID method
+        author = self.getUserID()
+        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(post_key)
+
+        comment_key = db.Key.from_path('Comment', int(comment_id), parent=post_key)
+
+        # Handle if valid post
+        if comment:
+            # Create new post as p variable
+            c = Comment(key=comment_key, parent=post_key, comment=comment, author=author)
+            # Store element (p) in database
+            c.put()
+            # Redirect to blog page using ID of element
+            self.redirect('/blog/%s' % str(post.key().id()))
+
+        # Error handling if invalid post
+        else:
+            # Define error message to user
+            error = "Please write a comment"
+            # Render HTML page with variables passed
+            self.render("newcomment.html", post=post, error=error, comment=comment)
+
 
 # Handle new post
 class NewPost(Handler):
@@ -566,5 +617,6 @@ app = webapp2.WSGIApplication([
     ('/delete/([0-9]+)', DeletePost),
     ('/deletesuccess', DeleteSuccess),
     ('/newcomment/([0-9]+)', NewComment),
+    ('/editcomment/([0-9]+)/([0-9]+)', EditComment),
     ],
     debug=True)

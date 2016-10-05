@@ -1,0 +1,21 @@
+
+<!-- TODO Review code -->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Edit Comment</h2>
+  
+  {{post.render() | safe}}
+
+    <form method="post">
+      <label>
+        <div>comment</div>
+        <textarea name="comment">{{comment}}</textarea>
+      </label>
+
+      <div class="error">{{error}}</div>
+
+      <input type="submit" value="comment">
+    </form>
+{% endblock %}
