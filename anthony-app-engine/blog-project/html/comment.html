@@ -1,0 +1,9 @@
+
+<div class="comment">
+
+	<div class="comment-content">
+		{{c.comment | safe}}
+		<a href="/editcomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="main-title"> Edit Comment</a>
+	</div>
+
+</div>

@@ -14,4 +14,9 @@
 	<div class="post-content">
 		{{p.render_text | safe}}
 	</div>
+
+	<div>
+		<a href="/edit/{{ p.key().id() }}" class="main-title"> Edit Post</a>
+	</div>
+
 </div>

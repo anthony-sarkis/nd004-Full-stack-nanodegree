@@ -7,7 +7,6 @@ import hashlib
 import hmac
 import string
 import random
-from string import letters
 from google.appengine.ext import db
 
 # Define HTML template directory, load templates using Jinja
@@ -60,16 +59,16 @@ def valid_pw(name, pw, h):
     return make_pw_hash(name, pw, salt) == h
     # return true
 
-def users_key(group = 'default'):
+def users_key(group='default'):
     return db.Key.from_path('users', group)
 
 ##################
 
-# Class for Users ### USERS USERS 
+# Class for Users ### USERS USERS
 class User(db.Model):
     # set parameters
-    name = db.StringProperty(required = True)
-    pw_hash = db.StringProperty(required = True)
+    name = db.StringProperty(required=True)
+    pw_hash = db.StringProperty(required=True)
     email = db.StringProperty()
 
     # functions
@@ -77,7 +76,7 @@ class User(db.Model):
     def by_id(cls, uid):
         # get by id is built in
         # pass user ID
-        return User.get_by_id(uid, parent = users_key())
+        return User.get_by_id(uid, parent=users_key())
 
     @classmethod
     def by_name(cls, name):
@@ -86,14 +85,14 @@ class User(db.Model):
         return u
 
     @classmethod
-    def register(cls, name, pw, email = None):
+    def register(cls, name, pw, email=None):
         # Make password hash
         pw_hash = make_pw_hash(name, pw)
         # Return user, with pw_hash instead of pw
-        return User(parent = users_key(),
-                    name = name,
-                    pw_hash = pw_hash,
-                    email = email)
+        return User(parent=users_key(),
+                    name=name,
+                    pw_hash=pw_hash,
+                    email=email)
 
     @classmethod
     def login(cls, name, pw):
@@ -158,53 +157,50 @@ class Handler(webapp2.RequestHandler):
             x = int(x.split('|')[0])
             return x
 
+
 # Class for posts
 class Post(db.Model):
-    subject = db.StringProperty(required = True)
-    content = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
+    subject = db.StringProperty(required=True)
+    content = db.TextProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
     # Used to assign a post to a user
-    created_by = db.IntegerProperty(required = True)
-    last_modified = db.DateTimeProperty(auto_now = True)
+    created_by = db.IntegerProperty(required=True)
+    last_modified = db.DateTimeProperty(auto_now=True)
 
     def render(self):
         # Replace line break with html <br> to render well
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p = self)
+        self.render_text = self.content.replace('\n', '<br>')
+        return render_str("post.html", p=self)
 
-# Class for Likes
+
 class Like(db.Model):
-    like = db.BooleanProperty(required = True)
-    created_by = db.IntegerProperty(required = True)
-    #linked_post = db.IntegerProperty(required = True)
+    # TODO change to a list
+    like = db.ListProperty(int, required=True)
+
 
 class Comment(db.Model):
-    comment = db.TextProperty(required = True)
-    author = db.IntegerProperty(required = True)
-    #linked_post = db.IntegerProperty(required = True)
+    comment = db.TextProperty(required=True)
+    author = db.IntegerProperty(required=True)
+
+    def render(self):
+        # Replace line break with html <br> to render well
+        return render_str("comment.html", c=self)
 
 # Blog section   ###############
 
-# Remove line breaks for smooth post rendering
-def render_post(response, post, comment):
-    response.out.write('<b>' + post.subject + '</b><br>')
-    response.out.write(post.content)
-    # TODO handling for displaying comments on posts
-    # Not yet complete. response.out.write(comment.comment)  This is not quite right but something similar.
-    # comments = Comment.all().filter('Parent =', post).get()
-    # response.out.write(comments)
 
-
-def blog_key(name = 'default'):
+def blog_key(name='default'):
     return db.Key.from_path('blogs', name)
+
 
 # render all posts blog front page
 class BlogFront(Handler):
     def get(self):
         # Get posts from DB. Select all from Post table order by created
-        posts = greetings = Post.all().order('-created')
+        posts = Post.all().order('-created')
         # Render front page, pass "posts" variable as posts
-        self.render('front.html', posts = posts)
+        self.render('front.html', posts=posts)
+
 
 # Render a specific post
 class PostPage(Handler):
@@ -215,27 +211,28 @@ class PostPage(Handler):
         # Look up a specific item in the db using key
         post = db.get(key)
 
+        # working now!!! can use post or key?????
+        comments = Comment.all().ancestor(post)
+
         # Return error if no valid key
         if not post:
             self.error(404)
             return
 
         # Render page using Permalink HTML as a template, pass post var as post
-        self.render("permalink.html", post = post)
+        self.render("permalink.html", post=post, comments=comments)
 
-## new Commment handler
+
 class NewComment(Handler):
     def get(self, post_id):
 
-    # Get post ID to link to commment
+        # Get post ID to link to commment
         post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(post_key)
         if not post:
             self.error(404)
             return
 
-        comment_author = self.getUserID()
-        post_author = post.created_by
         # Permissions, options could set here for editing
         if self.user:
                 self.render("newcomment.html", post=post)
@@ -259,7 +256,7 @@ class NewComment(Handler):
             # Store element (p) in database
             c.put()
             # Redirect to blog page using ID of element
-            self.redirect('/blog/%s' % str(post.key().id()))
+            self.redirect('/post/%s' % str(post.key().id()))
 
         # Error handling if invalid post
         else:
@@ -268,9 +265,9 @@ class NewComment(Handler):
             # Render HTML page with variables passed
             self.render("newcomment.html", post=post, error=error, comment=comment)
 
-#### WORKING 10/14/16
+# ### WORKING 10/14/16
 
-### Edit Comment Handler
+# ## Edit Comment Handler
 class EditComment(Handler):
     def get(self, post_id, comment_id):
         # Get post ID to link to commment
@@ -279,9 +276,6 @@ class EditComment(Handler):
         if not post:
             self.error(404)
             return
-
-        comment_author = self.getUserID()
-        post_author = post.created_by
 
         # Get comment key from second path
         comment_key = db.Key.from_path('Comment', int(comment_id), parent=post_key)
@@ -309,11 +303,12 @@ class EditComment(Handler):
         # Handle if valid post
         if comment:
             # Create new post as p variable
-            c = Comment(key=comment_key, parent=post_key, comment=comment, author=author)
+            c = Comment(key=comment_key, parent=post_key, comment=comment,
+                        author=author)
             # Store element (p) in database
             c.put()
             # Redirect to blog page using ID of element
-            self.redirect('/blog/%s' % str(post.key().id()))
+            self.redirect('/post/%s' % str(post.key().id()))
 
         # Error handling if invalid post
         else:
@@ -349,7 +344,7 @@ class NewPost(Handler):
             # Store element (p) in database
             p.put()
             # Redirect to blog page using ID of element
-            self.redirect('/blog/%s' % str(p.key().id()))
+            self.redirect('/post/%s' % str(p.key().id()))
 
         # Error handling if invalid post
         else:
@@ -361,6 +356,7 @@ class NewPost(Handler):
 
 #### NEW  ############ INCOMPLETE as of 9/27
 # Method to edit posts 
+
 
 class EditPost(Handler):
     def get(self, post_id):
@@ -376,54 +372,54 @@ class EditPost(Handler):
             return
 
         # Now that we have the correct "post" we can call properties of it
+
+        # Working on getting LIKES working, feel I'm missing something with appending it to a list...
+
         content = post.content
         subject = post.subject
+        likes = Likes.all().ancestor(post)
 
-        # WORKING working on getting correct Like entity to allow user to edit like...?
-        #like_key = db.GqlQuery("select __key__ WHERE __key__ HAS PARENT KEY(Post, key)")
-        #like = db.get(like_key)
-        #like_bool = like.like
         # Render page using Permalink HTML as a template, pass post var as post
-        self.render("editpost.html", content=content, subject=subject)
+        self.render("editpost.html", content=content, subject=subject, likes=likes)
 
     def post(self, post_id):
         # Get variables passed from form
         subject = self.request.get('subject')
         content = self.request.get('content')
-        # LIKE
-        #like_bool = self.request.get('like_bool') 
-        #if like_bool == "checked":
-            #like_bool = True
-        #else:
-            #like_bool = False
-
-        # get from URL path the post key 
+        # get from URL path the post key
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-    
+
         # Check permissions. If the same user trying to edit it is the one who created it
         created_by_edit = self.getUserID()
         created_by_actual = post.created_by
+
+        # LIKE
+        like = self.request.get('like_bool')
+        if like == "checked":
+            like = created_by_actual
+
         if created_by_actual == created_by_edit:
 
             # Handle if valid post
             if subject and content:
                 # Update the post
                 # passes the key as the key so it overwrites old post
-                #l = Like(parent=post, like=like_bool, created_by=created_by_actual)
+                l = Like.append(parent=post, like=like)
                 p = Post(key=key, parent=blog_key(), subject=subject, content=content, created_by=created_by_actual)
                 # Store element (p) in database
-                #l.put()
+                l.put()
                 p.put()
                 # Redirect to blog page using ID of element
-                self.redirect('/blog/%s' % str(p.key().id()))
+                self.redirect('/post/%s' % str(p.key().id()))
 
             # Error handling if invalid post
             else:
                 # Define error message to user
                 error = "Subject and Content please :)"
                 # Render HTML page with variables passed
-                self.render("editpost.html", subject=subject, content=content, error=error)
+                self.render("editpost.html", subject=subject,
+                            content=content, error=error)
         # Error handling if correct user is not logged in
         else:
             error = "Please login to edit"
@@ -433,6 +429,8 @@ class EditPost(Handler):
 
 # Delete a post
 # Shuold this be a function not a class?
+
+
 class DeletePost(Handler):
     def get(self, post_id):
         # Create key. Find post from post_id
@@ -479,6 +477,7 @@ class DeletePost(Handler):
         else:
             error = "Please login to delete"
             self.redirect('/login?error=' + error)
+
 
 class DeleteSuccess(Handler):
     def get(self):
@@ -527,8 +526,7 @@ class Signup(Handler):
         self.email = self.request.get('email')
 
         # create dictionary for error handling
-        params = dict(username = self.username,
-                        email = self.email)
+        params = dict(username = self.username, email=self.email)
 
         # error handling
         if not valid_username(self.username):
@@ -604,13 +602,13 @@ class Logout(Handler):
         self.logout()
         self.redirect('/signup')
 
+
 app = webapp2.WSGIApplication([
-    ('/', Register),
     ('/signup', Register),
     ('/welcome', Welcome),
-    ('/blog/?', BlogFront),
-    ('/blog/([0-9]+)', PostPage),
-    ('/blog/newpost', NewPost),
+    ('/?', BlogFront),
+    ('/post/([0-9]+)', PostPage),
+    ('/newpost', NewPost),
     ('/login', Login),
     ('/logout', Logout),
     ('/edit/([0-9]+)', EditPost),
