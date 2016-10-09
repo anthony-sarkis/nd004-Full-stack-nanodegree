@@ -24,27 +24,32 @@ def render_str(template, **params):
 # normally would not store in this file
 SECRET = 'imsosecret'
 
+
 # call hmac passing secret phrase and phrase variable
 def hash_str(s):
-    x = hmac.new(SECRET,s).hexdigest()
+    x = hmac.new(SECRET, s).hexdigest()
     return x
+
 
 # Return string with hash and value
 def make_secure_val(s):
     return "%s|%s" % (s, hash_str(s))
 
+
 # Check if cookie hash value equals real hash
-def check_secure_val(h): 
+def check_secure_val(h):
     x = h.split('|')[0]
     if make_secure_val(x) == h:
         return x
 
-# Salt for password hash 
+
+# Salt for password hash
 def make_salt():
     return ''.join(random.choice(string.letters) for x in xrange(5))
 
+
 # Make password hash
-def make_pw_hash(name, pw, salt = None):
+def make_pw_hash(name, pw, salt=None):
     if not salt:
         salt = make_salt()
     # Create the sha256 hash using combo of name, password, and salt
@@ -166,17 +171,13 @@ class Post(db.Model):
     # Used to assign a post to a user
     created_by = db.IntegerProperty(required=True)
     last_modified = db.DateTimeProperty(auto_now=True)
+    like = db.ListProperty(int)
+    likes_count = db.IntegerProperty(default=0)
 
     def render(self):
         # Replace line break with html <br> to render well
         self.render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p=self)
-
-
-class Like(db.Model):
-    # TODO change to a list
-    like = db.ListProperty(int, required=True)
-
 
 class Comment(db.Model):
     comment = db.TextProperty(required=True)
@@ -197,9 +198,10 @@ def blog_key(name='default'):
 class BlogFront(Handler):
     def get(self):
         # Get posts from DB. Select all from Post table order by created
+        error = self.request.get("error")
         posts = Post.all().order('-created')
         # Render front page, pass "posts" variable as posts
-        self.render('front.html', posts=posts)
+        self.render('front.html', posts=posts, error=error)
 
 
 # Render a specific post
@@ -266,6 +268,7 @@ class NewComment(Handler):
             self.render("newcomment.html", post=post, error=error, comment=comment)
 
 # ### WORKING 10/14/16
+
 
 # ## Edit Comment Handler
 class EditComment(Handler):
@@ -340,7 +343,8 @@ class NewPost(Handler):
         # Handle if valid post
         if subject and content:
             # Create new post as p variable
-            p = Post(parent = blog_key(), subject=subject, content=content, created_by=created_by)
+            p = Post(parent=blog_key(), subject=subject, content=content,
+                     created_by=created_by, like=[])
             # Store element (p) in database
             p.put()
             # Redirect to blog page using ID of element
@@ -372,15 +376,14 @@ class EditPost(Handler):
             return
 
         # Now that we have the correct "post" we can call properties of it
-
         # Working on getting LIKES working, feel I'm missing something with appending it to a list...
 
         content = post.content
         subject = post.subject
-        likes = Likes.all().ancestor(post)
+        #like = Like.all().ancestor(post)
 
         # Render page using Permalink HTML as a template, pass post var as post
-        self.render("editpost.html", content=content, subject=subject, likes=likes)
+        self.render("editpost.html", content=content, subject=subject)
 
     def post(self, post_id):
         # Get variables passed from form
@@ -390,25 +393,17 @@ class EditPost(Handler):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
-        # Check permissions. If the same user trying to edit it is the one who created it
+        # Check permissions. If same user trying to edit is who created it
         created_by_edit = self.getUserID()
         created_by_actual = post.created_by
 
-        # LIKE
-        like = self.request.get('like_bool')
-        if like == "checked":
-            like = created_by_actual
-
         if created_by_actual == created_by_edit:
-
             # Handle if valid post
             if subject and content:
                 # Update the post
-                # passes the key as the key so it overwrites old post
-                l = Like.append(parent=post, like=like)
-                p = Post(key=key, parent=blog_key(), subject=subject, content=content, created_by=created_by_actual)
+                p = Post(key=key, parent=blog_key(), subject=subject,
+                         content=content, created_by=created_by_actual)
                 # Store element (p) in database
-                l.put()
                 p.put()
                 # Redirect to blog page using ID of element
                 self.redirect('/post/%s' % str(p.key().id()))
@@ -425,7 +420,37 @@ class EditPost(Handler):
             error = "Please login to edit"
             self.redirect('/login?error=' + error)
 
-########### INCOMPLETE as of 9/27
+class LikePost(Handler):
+    def get(self, post_id):
+        if not self.user:
+            self.redirect("/login")
+        else:
+            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+            post = db.get(key)
+            logged_user = self.user.key().id()
+            created_by_actual = post.created_by
+
+            if logged_user == created_by_actual:
+                error="Can't like your own post"
+                self.redirect('/?error=' + error)
+            elif logged_user in post.like:
+                like = logged_user
+                post.like.remove(like)
+                post.likes_count -= 1
+                post.put()
+                error="Unliked Post"
+                self.redirect('/?error=' + error)
+            else:
+                like = logged_user
+                post.like.append(like)
+                post.likes_count += 1
+                post.put()
+                error="Liked Post"
+                self.redirect('/?error=' + error)
+
+
+
+# ########## INCOMPLETE as of 9/27
 
 # Delete a post
 # Shuold this be a function not a class?
@@ -486,14 +511,20 @@ class DeleteSuccess(Handler):
 
 # Define error handling functions for user creation
 # Allow a-z, A-Z, 0-0, _, - using regular expression
+
+
 # 3 - 20 characters
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
     return username and USER_RE.match(username)
+
+
 # Check password
 PASS_RE = re.compile(r"^.{3,20}$")
 def valid_password(password):
     return password and PASS_RE.match(password)
+
+
 # Check email
 EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
@@ -506,9 +537,10 @@ class Welcome(Handler):
     def get(self):
         if self.user:
             # Calling class function to look up username by name
-            self.render('welcome.html', username = self.user.name)
+            self.render('welcome.html', username=self.user.name)
         else:
             self.redirect('/signup')
+
 
 # Sign up class
 class Signup(Handler):
@@ -526,7 +558,7 @@ class Signup(Handler):
         self.email = self.request.get('email')
 
         # create dictionary for error handling
-        params = dict(username = self.username, email=self.email)
+        params = dict(username=self.username, email=self.email)
 
         # error handling
         if not valid_username(self.username):
@@ -568,6 +600,7 @@ class Register(Signup):
             self.login(u)
             self.redirect('/welcome')
 
+
 """ 
 Login control flow
 
@@ -578,6 +611,7 @@ Login control flow
 3. Calls self.login method pass "u" variable
     3.1 This sets a secure cookie.
 """
+
 
 class Login(Handler):
     def get(self):
@@ -594,7 +628,7 @@ class Login(Handler):
             self.redirect('/welcome')
         else:
             msg = "Invalid login"
-            self.render('login-form.html', error = msg)
+            self.render('login-form.html', error=msg)
 
 # Logs out a user by clearing their cookies
 class Logout(Handler):
@@ -616,5 +650,6 @@ app = webapp2.WSGIApplication([
     ('/deletesuccess', DeleteSuccess),
     ('/newcomment/([0-9]+)', NewComment),
     ('/editcomment/([0-9]+)/([0-9]+)', EditComment),
+    ('/like/([0-9]+)', LikePost),
     ],
     debug=True)
