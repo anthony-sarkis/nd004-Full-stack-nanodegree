@@ -153,6 +153,12 @@ class Handler(webapp2.RequestHandler):
             uid = self.read_secure_cookie('user_id')
             self.user = uid and User.by_id(int(uid))
 
+    # Create key. Find post from post_id
+    # Call int to transform string from URL into integer post ID        
+    def get_post_key(self, post_id):
+        x = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        return x
+
     # Use to get a user ID from cookies to see who is making the post.
     def getUserID(self):
         # Is this right?
@@ -207,9 +213,7 @@ class BlogFront(Handler):
 # Render a specific post
 class PostPage(Handler):
     def get(self, post_id):
-        # Create key. Find post from post_id
-        # Call int to transform string from URL into integer post ID
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        key = self.get_post_key(post_id)
         # Look up a specific item in the db using key
         post = db.get(key)
 
@@ -229,7 +233,7 @@ class NewComment(Handler):
     def get(self, post_id):
 
         # Get post ID to link to commment
-        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post_key = self.get_post_key(post_id)
         post = db.get(post_key)
         if not post:
             self.error(404)
@@ -248,7 +252,7 @@ class NewComment(Handler):
         comment = self.request.get('comment')
         # assign post to a user using getUserbyID method
         author = self.getUserID()
-        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post_key = self.get_post_key(post_id)
         post = db.get(post_key)
 
         # Handle if valid post
@@ -274,7 +278,7 @@ class NewComment(Handler):
 class EditComment(Handler):
     def get(self, post_id, comment_id):
         # Get post ID to link to commment
-        post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post_key = self.get_post_key(post_id)
         post = db.get(post_key)
         if not post:
             self.error(404)
@@ -425,7 +429,7 @@ class LikePost(Handler):
         if not self.user:
             self.redirect("/login")
         else:
-            key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+            key = self.get_post_key(post_id)
             post = db.get(key)
             logged_user = self.user.key().id()
             created_by_actual = post.created_by
