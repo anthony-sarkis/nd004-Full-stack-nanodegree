@@ -379,15 +379,21 @@ class EditPost(Handler):
             self.error(404)
             return
 
-        # Now that we have the correct "post" we can call properties of it
-        # Working on getting LIKES working, feel I'm missing something with appending it to a list...
+        created_by_edit = self.getUserID()
+        created_by_actual = post.created_by
 
-        content = post.content
-        subject = post.subject
-        #like = Like.all().ancestor(post)
+        if created_by_actual == created_by_edit:
+            # Now that we have the correct "post" we can call properties of it
 
-        # Render page using Permalink HTML as a template, pass post var as post
-        self.render("editpost.html", content=content, subject=subject)
+            content = post.content
+            subject = post.subject
+
+            # Render page using Permalink HTML as a template, pass post var as post
+            self.render("editpost.html", content=content, subject=subject)
+        else:
+            error = "You don't have permission to edit this post. Please login as the user who created this post."
+            # maybe hide button entierly?
+            self.redirect('/?error=' + error)
 
     def post(self, post_id):
         # Get variables passed from form
@@ -421,13 +427,15 @@ class EditPost(Handler):
                             content=content, error=error)
         # Error handling if correct user is not logged in
         else:
-            error = "Please login to edit"
-            self.redirect('/login?error=' + error)
+            error = "You don't have permission to edit this post. Please login as the user who created this post."
+            # maybe hide button entierly? error message is long
+            self.redirect('/?error=' + error)
 
 class LikePost(Handler):
     def get(self, post_id):
         if not self.user:
-            self.redirect("/login")
+            error = "Please login to Like a post."
+            self.redirect('/login?error=' + error)
         else:
             key = self.get_post_key(post_id)
             post = db.get(key)

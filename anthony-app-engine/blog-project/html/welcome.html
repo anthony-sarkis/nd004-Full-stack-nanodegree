@@ -1,14 +1,26 @@
 
+{% extends "base.html"%}
+<!-- Extend HTML from base html template -->
+
+{% block content%}
 
 <!DOCTYPE html>
 
 <html>
-<head>
-	<title>Welcome</title>
-</head>
-<body>
+	<head>
+		<title>Welcome</title>
+	</head>
+	
+	<body>
 
-<h1> Welcome {{username}} </h1>
+	<h1> Welcome {{username}}. </h1>
 
-</body>
-</html>
+	<p> Would you like to make a 
+		<a href="/newpost"> new post</a>?
+	</p>
+
+	</body>
+
+</html>	
+
+{% endblock %}
