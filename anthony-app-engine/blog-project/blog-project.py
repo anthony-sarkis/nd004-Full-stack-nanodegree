@@ -324,6 +324,38 @@ class EditComment(Handler):
             # Render HTML page with variables passed
             self.render("newcomment.html", post=post, error=error, comment=comment)
 
+# #### Working 10/12/2016
+# Seems to be ok... but not sure if really happy with it.
+
+class DeleteComment(Handler):
+    def get(self, post_id, comment_id):
+        # Get post ID to link to commment
+        post_key = self.get_post_key(post_id)
+        post = db.get(post_key)
+        if not post:
+            self.error(404)
+            return
+
+        # Get comment key from second path
+        comment_key = db.Key.from_path('Comment', int(comment_id), parent=post_key)
+        comment = db.get(comment_key)
+        # Access the comment itself from the comment class
+        original_comment = comment.comment
+
+        # Permissions
+        created_by_edit = self.getUserID()
+        created_by_actual = post.created_by
+        # If valid user, delete post and show success message
+        if created_by_actual == created_by_edit:
+            comment.delete()
+            self.redirect('/deletesuccess')
+        # Error handling if not valid user
+        # TODO Redirect to login page, then redirect back to delete page automatically
+        else:
+            error = "Please login to delete"
+            self.redirect('/login?error=' + error)
+
+# #### Working 10/12/2016
 
 # Handle new post
 class NewPost(Handler):
@@ -482,6 +514,7 @@ class DeletePost(Handler):
             return
 
         # Now that we have the correct "post" we can call properties of it
+        # Would rather show a static post over a form as not editing it?? Or could handle in get
         content = post.content
         subject = post.subject
 
@@ -662,6 +695,7 @@ app = webapp2.WSGIApplication([
     ('/deletesuccess', DeleteSuccess),
     ('/newcomment/([0-9]+)', NewComment),
     ('/editcomment/([0-9]+)/([0-9]+)', EditComment),
+    ('/deletecomment/([0-9]+)/([0-9]+)', DeleteComment),
     ('/like/([0-9]+)', LikePost),
     ],
     debug=True)

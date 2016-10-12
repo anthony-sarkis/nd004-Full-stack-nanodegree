@@ -15,6 +15,10 @@
 		{{p.render_text | safe}}
 	</div>
 
+	<div class="post-likes">
+		Likes: {{p.likes_count}}
+	</div>
+
 	<div>
 		<a href="/like/{{ p.key().id() }}" class=""> Like</a>
 	</div>
