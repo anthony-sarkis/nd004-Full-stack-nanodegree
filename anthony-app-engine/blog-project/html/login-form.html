@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+
+{% extends "base.html"%}
+<!-- Extend HTML from base html template -->
+
+{% block content %}
+
 
 <html>
 <head>
@@ -9,19 +14,30 @@
 </head>
 <body>
 
+    {% if error %}
+      <div class="alert alert-warning"> {{error}} </div>
+    {% endif %}
+
 	<h2>Login</h2>
 	<form method="post">
-		<p> Username </p>
-		<input type="text" name="username" value="{{username}}">
-
-		<input type="password" name="password" value="">
-
-		<div class="error">
-			{{error}}
+		
+		<div>
+			<p> Username </p>
+			<input type="text" name="username" value="{{username}}">
 		</div>
 
-		<input type="submit">
+		<div>
+			<p> Password </p>
+			<input type="password" name="password" value="">
+		</div>
+		<br>
+		<div>
+			<input type="submit" value="Login" class="btn btn-primary">
+		</div>
+
 	</form>
 	
 </body>
 </html>
+
+{% endblock %}

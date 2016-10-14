@@ -4,9 +4,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Edit Comment</h2>
+  <h2>Editting comment</h2>
   
-  {{post.render() | safe}}
+  {{post.renderNoButtons() | safe}}
 
     <form method="post">
       <label>
@@ -16,6 +16,7 @@
 
       <div class="error">{{error}}</div>
 
-      <input type="submit" value="comment">
+      <input type="submit" value="Update Comment" class="btn btn-primary">
     </form>
+    
 {% endblock %}

@@ -4,21 +4,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>new post</h2>
+  <h2>New post</h2>
+
+    {% if error %}
+      <div class="alert alert-warning"> {{error}} </div>
+    {% endif %}
 
     <form method="post">
-      <label>
-        <div>subject</div>
+      <div>
+        <div>
+          <h4>Subject:</h4>
+        </div>
         <input type="text" name="subject" value="{{subject}}">
-      </label>
+      </div>
 
-      <label>
-        <div>blog</div>
+      <div>
+        <div>
+          <h4>Blog:</h4>
+        </div>
         <textarea name="content">{{content}}</textarea>
-      </label>
+      </div>
 
-      <div class="error">{{error}}</div>
-
-      <input type="submit">
+      <div>
+        <input class="btn btn-success" type="submit" value="Create Post">
+      </div>
     </form>
 {% endblock %}

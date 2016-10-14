@@ -3,13 +3,33 @@
 <!-- Extend HTML from base html template -->
 
 {% block content%}
-
 	<!-- Render posts (var p) with html declared as safe -->
+	
+	{% if error %}
+		<div class="alert alert-danger"> {{error}} </div>
+	{% endif %}
+
+	{% if alert %}
+		<div class="alert alert-warning"> {{alert}} </div>
+	{% endif %}
+
 	{% for p in posts %}
 		{{ p.render() | safe }}
-		<br><br>
-	{% endfor %}
+		
+		<div>
+		<a href="/like/{{ p.key().id() }}" class=""> 
+		
+		{% if user_id in p.like %}
+			{{ "Unlike"}}
+		{% else %}
+			{{ "Like"}}
+		{% endif %}
 
-	{{error}}	
+		</a>
+		</div>
+
+		<br><br>
+
+	{% endfor %}
 
 {% endblock %}

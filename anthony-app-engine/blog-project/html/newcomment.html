@@ -4,18 +4,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>New Comment</h2>
+  <h4>Commenting on:</h4>
   
-  {{post.render() | safe}}
+  {{post.renderNoButtons() | safe}}
+
+    {% if error %}
+      <div class="alert alert-warning"> {{error}} </div>
+    {% endif %}
+
 
     <form method="post">
-      <label>
-        <div>comment</div>
+      <div>
+        <div>Comment</div>
         <textarea name="comment">{{comment}}</textarea>
-      </label>
+      </div>
 
-      <div class="error">{{error}}</div>
-
-      <input type="submit" value="comment">
+      <div>
+        <input type="submit" value="Comment" class="btn btn-success">
+      </div>
     </form>
 {% endblock %}

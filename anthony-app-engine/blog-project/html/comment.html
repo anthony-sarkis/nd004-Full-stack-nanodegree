@@ -3,13 +3,21 @@
 
 	<div class="comment-content">
 		
-		{{c.comment | safe}}
+		<div>
+			<p> {{c.comment | safe}} </p>
+		</div>
 
-		<a href="/editcomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="main-title"> Edit Comment
-		</a>
+		<div>
+			<a href="/editcomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="btn btn-primary"> 
+				Edit
+			</a>
+		</div>
 
-		<a href="/deletecomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="main-title"> Delete Comment
-		</a>
+		<div>
+			<a href="/deletecomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="btn btn-danger"> 
+				Delete
+			</a>
+		</div>
 
 	</div>
 

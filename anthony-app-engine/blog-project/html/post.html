@@ -1,38 +1,25 @@
 
 <div class="post">
 
-	<div class="post-heading">
-		<div class="post-title">
-			{{p.subject}}
-		</div>
-
-		<div class="post-date">
-			{{p.created.strftime("%b %d, %Y")}}
-		</div>
+	<div class="page-header">
+		<h1>
+			{{p.subject}} <small> {{p.created.strftime("%b %d, %Y")}} </small>
+		</h1>
 	</div>
 
 	<div class="post-content">
-		{{p.render_text | safe}}
+		<p> {{p.render_text | safe}} </p>
+		<br> <br>
 	</div>
 
-	<div class="post-likes">
-		Likes: {{p.likes_count}}
-	</div>
+	<a href="/edit/{{ p.key().id() }}" class="btn btn-primary"> Edit Post</a>
 
-	<div>
-		<a href="/like/{{ p.key().id() }}" class=""> Like</a>
-	</div>
+	<a href="/newcomment/{{ p.key().id() }}" class="btn btn-success"> Comment</a>
 
-	<div>
-		<a href="/edit/{{ p.key().id() }}" class=""> Edit Post</a>
-	</div>
+	<a href="/delete/{{ p.key().id() }}" class="btn btn-danger"> Delete Post</a>
 
-	<div>
-		<a href="/newcomment/{{ p.key().id() }}" class=""> Comment</a>
-	</div>
-
-	<div>
-		<a href="/delete/{{ p.key().id() }}" class=""> Delete Post</a>
+	<div class="post-likes" >
+		Likes: <span class="badge"> {{p.likes_count}} </span>
 	</div>
 
 </div>

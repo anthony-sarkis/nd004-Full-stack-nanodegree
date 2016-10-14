@@ -20,9 +20,8 @@ def render_str(template, **params):
     return t.render(params)
 
 # #################### Hashing and password functions
-
 # normally would not store in this file
-SECRET = 'imsosecret'
+SECRET = 'applesauce'
 
 
 # call hmac passing secret phrase and phrase variable
@@ -56,6 +55,7 @@ def make_pw_hash(name, pw, salt=None):
     h = hashlib.sha256(name + pw + salt).hexdigest()
     return '%s,%s' % (h, salt)
 
+
 # Verify password by matching
 def valid_pw(name, pw, h):
     # Split apart the salt from the hash
@@ -63,6 +63,7 @@ def valid_pw(name, pw, h):
     # Determine if password is valid by comparing new hash to old hash
     return make_pw_hash(name, pw, salt) == h
     # return true
+
 
 def users_key(group='default'):
     return db.Key.from_path('users', group)
@@ -168,7 +169,6 @@ class Handler(webapp2.RequestHandler):
             x = int(x.split('|')[0])
             return x
 
-
 # Class for posts
 class Post(db.Model):
     subject = db.StringProperty(required=True)
@@ -184,6 +184,11 @@ class Post(db.Model):
         # Replace line break with html <br> to render well
         self.render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p=self)
+
+    def renderNoButtons(self):
+        # Replace line break with html <br> to render well
+        self.render_text = self.content.replace('\n', '<br>')
+        return render_str("post-no-buttons.html", p=self)
 
 class Comment(db.Model):
     comment = db.TextProperty(required=True)
@@ -205,9 +210,15 @@ class BlogFront(Handler):
     def get(self):
         # Get posts from DB. Select all from Post table order by created
         error = self.request.get("error")
+        alert = self.request.get("alert")
         posts = Post.all().order('-created')
+        # right way?
+        if self.user:
+            user_id = self.user.key().id()
+        else:
+            user_id = "notloggedin"
         # Render front page, pass "posts" variable as posts
-        self.render('front.html', posts=posts, error=error)
+        self.render('front.html', posts=posts, user_id=user_id, error=error, alert=alert)
 
 
 # Render a specific post
@@ -411,21 +422,26 @@ class EditPost(Handler):
             self.error(404)
             return
 
-        created_by_edit = self.getUserID()
-        created_by_actual = post.created_by
+        if self.user:
+            #created_by_edit = self.getUserID()  What's the difference?
+            created_by_edit = self.user.key().id()
+            created_by_actual = post.created_by
 
-        if created_by_actual == created_by_edit:
-            # Now that we have the correct "post" we can call properties of it
+            if created_by_actual == created_by_edit:
+                # Now that we have the correct "post" we can call properties of it
 
-            content = post.content
-            subject = post.subject
+                content = post.content
+                subject = post.subject
 
-            # Render page using Permalink HTML as a template, pass post var as post
-            self.render("editpost.html", content=content, subject=subject)
+                # Render page using Permalink HTML as a template, pass post var as post
+                self.render("editpost.html", content=content, subject=subject)
+            else:
+                error = "You don't have permission to edit this post. Please login as the user who created this post."
+                # maybe hide button entierly?
+                self.redirect('/?error=' + error)
         else:
-            error = "You don't have permission to edit this post. Please login as the user who created this post."
-            # maybe hide button entierly?
-            self.redirect('/?error=' + error)
+            error = "Please login to edit"
+            self.redirect('/login?error=' + error)
 
     def post(self, post_id):
         # Get variables passed from form
@@ -482,15 +498,15 @@ class LikePost(Handler):
                 post.like.remove(like)
                 post.likes_count -= 1
                 post.put()
-                error="Unliked Post"
-                self.redirect('/?error=' + error)
+                alert = "Unliked Post"
+                self.redirect('/?alert=' + alert)
             else:
                 like = logged_user
                 post.like.append(like)
                 post.likes_count += 1
                 post.put()
-                error="Liked Post"
-                self.redirect('/?error=' + error)
+                alert="Liked Post"
+                self.redirect('/?alert=' + alert)
 
 
 
@@ -513,19 +529,23 @@ class DeletePost(Handler):
             self.error(404)
             return
 
-        # Now that we have the correct "post" we can call properties of it
-        # Would rather show a static post over a form as not editing it?? Or could handle in get
-        content = post.content
-        subject = post.subject
+        if self.user:
+            # Now that we have the correct "post" we can call properties of it
+            # Would rather show a static post over a form as not editing it?? Or could handle in get
+            content = post.content
+            subject = post.subject
 
-        created_by_edit = self.getUserID()
-        created_by_actual = post.created_by
+            created_by_edit = self.getUserID()
+            created_by_actual = post.created_by
 
-        if created_by_actual == created_by_edit:
-            self.render("deletepost.html", content=content, subject=subject)
-            ## TODO   Undo function?
-        # Error handling if not valid user
-        # TODO Redirect to login page, then redirect back to delete page automatically
+            if created_by_actual == created_by_edit:
+                self.render("deletepost.html", content=content, subject=subject)
+                ## TODO   Undo function?
+            # Error handling if not valid user
+            # TODO Redirect to login page, then redirect back to delete page automatically
+            else:
+                error = "Please login to delete"
+                self.redirect('/login?error=' + error)
         else:
             error = "Please login to delete"
             self.redirect('/login?error=' + error)
