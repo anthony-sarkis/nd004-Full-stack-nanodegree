@@ -6,19 +6,14 @@
 {% block content %}
   <h2>Delete post</h2>
 
+  {% if error %}
+    <div class="alert alert-danger"> {{error}} </div>
+  {% endif %}
+
+    {{post.renderNoButtons() | safe}}
+
     <form method="post">
-      <label>
-        <div>subject</div>
-        <input type="text" name="subject" value="{{subject}}">
-      </label>
-
-      <label>
-        <div>blog</div>
-        <textarea name="content">{{content}}</textarea>
-      </label>
-
-      <div class="error">{{error}}</div>
-
-      <input type="submit" value="Delete Post">
+      <input type="submit" value="Confirm Delete Post" class="btn btn-danger">
     </form>
+
 {% endblock %}

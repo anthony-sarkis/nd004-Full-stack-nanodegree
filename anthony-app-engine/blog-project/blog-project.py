@@ -19,7 +19,7 @@ def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
 
-# #################### Hashing and password functions
+# Hashing and password functions
 # normally would not store in this file
 SECRET = 'applesauce'
 
@@ -68,11 +68,8 @@ def valid_pw(name, pw, h):
 def users_key(group='default'):
     return db.Key.from_path('users', group)
 
-##################
-
-# Class for Users ### USERS USERS
+# db classes
 class User(db.Model):
-    # set parameters
     name = db.StringProperty(required=True)
     pw_hash = db.StringProperty(required=True)
     email = db.StringProperty()
@@ -81,7 +78,6 @@ class User(db.Model):
     @classmethod
     def by_id(cls, uid):
         # get by id is built in
-        # pass user ID
         return User.get_by_id(uid, parent=users_key())
 
     @classmethod
@@ -109,7 +105,34 @@ class User(db.Model):
             return u
 
 
-###############################
+class Post(db.Model):
+    subject = db.StringProperty(required=True)
+    content = db.TextProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+    # Used to assign a post to a user
+    created_by = db.IntegerProperty(required=True)
+    last_modified = db.DateTimeProperty(auto_now=True)
+    like = db.ListProperty(int)
+    likes_count = db.IntegerProperty(default=0)
+
+    def render(self):
+        # Replace line break with html <br> to render well
+        self.render_text = self.content.replace('\n', '<br>')
+        return render_str("post.html", p=self)
+
+    def renderNoButtons(self):
+        # Replace line break with html <br> to render well
+        self.render_text = self.content.replace('\n', '<br>')
+        return render_str("post-no-buttons.html", p=self)
+
+
+class Comment(db.Model):
+    comment = db.TextProperty(required=True)
+    author = db.IntegerProperty(required=True)
+
+    def render(self):
+        # Replace line break with html <br> to render well
+        return render_str("comment.html", c=self)
 
 
 # Primary handler to help with general functions
@@ -168,37 +191,6 @@ class Handler(webapp2.RequestHandler):
         if not x == '':
             x = int(x.split('|')[0])
             return x
-
-# Class for posts
-class Post(db.Model):
-    subject = db.StringProperty(required=True)
-    content = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    # Used to assign a post to a user
-    created_by = db.IntegerProperty(required=True)
-    last_modified = db.DateTimeProperty(auto_now=True)
-    like = db.ListProperty(int)
-    likes_count = db.IntegerProperty(default=0)
-
-    def render(self):
-        # Replace line break with html <br> to render well
-        self.render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p=self)
-
-    def renderNoButtons(self):
-        # Replace line break with html <br> to render well
-        self.render_text = self.content.replace('\n', '<br>')
-        return render_str("post-no-buttons.html", p=self)
-
-class Comment(db.Model):
-    comment = db.TextProperty(required=True)
-    author = db.IntegerProperty(required=True)
-
-    def render(self):
-        # Replace line break with html <br> to render well
-        return render_str("comment.html", c=self)
-
-# Blog section   ###############
 
 
 def blog_key(name='default'):
@@ -282,10 +274,7 @@ class NewComment(Handler):
             # Render HTML page with variables passed
             self.render("newcomment.html", post=post, error=error, comment=comment)
 
-# ### WORKING 10/14/16
 
-
-# ## Edit Comment Handler
 class EditComment(Handler):
     def get(self, post_id, comment_id):
         # Get post ID to link to commment
@@ -335,9 +324,8 @@ class EditComment(Handler):
             # Render HTML page with variables passed
             self.render("newcomment.html", post=post, error=error, comment=comment)
 
-# #### Working 10/12/2016
-# Seems to be ok... but not sure if really happy with it.
 
+# Seems to be ok... but not sure if really happy with it.
 class DeleteComment(Handler):
     def get(self, post_id, comment_id):
         # Get post ID to link to commment
@@ -366,9 +354,7 @@ class DeleteComment(Handler):
             error = "Please login to delete"
             self.redirect('/login?error=' + error)
 
-# #### Working 10/12/2016
 
-# Handle new post
 class NewPost(Handler):
     """ """
     # Render new post HTML
@@ -403,10 +389,6 @@ class NewPost(Handler):
             error = "Subject and Content please :)"
             # Render HTML page with variables passed
             self.render("newpost.html", subject=subject, content=content, error=error)
-
-
-#### NEW  ############ INCOMPLETE as of 9/27
-# Method to edit posts 
 
 
 class EditPost(Handler):
@@ -479,6 +461,7 @@ class EditPost(Handler):
             # maybe hide button entierly? error message is long
             self.redirect('/?error=' + error)
 
+
 class LikePost(Handler):
     def get(self, post_id):
         if not self.user:
@@ -509,13 +492,6 @@ class LikePost(Handler):
                 self.redirect('/?alert=' + alert)
 
 
-
-# ########## INCOMPLETE as of 9/27
-
-# Delete a post
-# Shuold this be a function not a class?
-
-
 class DeletePost(Handler):
     def get(self, post_id):
         # Create key. Find post from post_id
@@ -531,15 +507,11 @@ class DeletePost(Handler):
 
         if self.user:
             # Now that we have the correct "post" we can call properties of it
-            # Would rather show a static post over a form as not editing it?? Or could handle in get
-            content = post.content
-            subject = post.subject
-
             created_by_edit = self.getUserID()
             created_by_actual = post.created_by
 
             if created_by_actual == created_by_edit:
-                self.render("deletepost.html", content=content, subject=subject)
+                self.render("deletepost.html", post=post)
                 ## TODO   Undo function?
             # Error handling if not valid user
             # TODO Redirect to login page, then redirect back to delete page automatically
@@ -572,12 +544,10 @@ class DeletePost(Handler):
 class DeleteSuccess(Handler):
     def get(self):
         self.render("deletesuccess.html")
-########### INCOMPLETE as of 9/27
+
 
 # Define error handling functions for user creation
 # Allow a-z, A-Z, 0-0, _, - using regular expression
-
-
 # 3 - 20 characters
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
@@ -607,7 +577,6 @@ class Welcome(Handler):
             self.redirect('/signup')
 
 
-# Sign up class
 class Signup(Handler):
     # Render basic html page
     def get(self):
@@ -676,7 +645,6 @@ Login control flow
 3. Calls self.login method pass "u" variable
     3.1 This sets a secure cookie.
 """
-
 
 class Login(Handler):
     def get(self):
