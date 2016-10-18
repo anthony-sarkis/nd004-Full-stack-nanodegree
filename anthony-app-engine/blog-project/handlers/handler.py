@@ -19,11 +19,6 @@ def blog_key(name='default'):
     return db.Key.from_path('blogs', name)
 
 
-def render_str(template, **params):
-    t = jinja_env.get_template(template)
-    return t.render(params)
-
-
 # Primary handler to help with general functions
 class Handler(webapp2.RequestHandler):
     # Create a template for "write" function
@@ -80,8 +75,3 @@ class Handler(webapp2.RequestHandler):
         if not x == '':
             x = int(x.split('|')[0])
             return x
-
-def render(self, Handler):
-    # Replace line break with html <br> to render well
-    self.render_text = self.content.replace('\n', '<br>')
-    return render_str("post.html", p=self)

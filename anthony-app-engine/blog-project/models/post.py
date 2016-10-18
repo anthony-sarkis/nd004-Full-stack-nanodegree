@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+import string
 
 class Post(db.Model):
     subject = db.StringProperty(required=True)
@@ -10,7 +11,12 @@ class Post(db.Model):
     like = db.ListProperty(int)
     likes_count = db.IntegerProperty(default=0)
 
-    def renderNoButtons(Handler):
+    def render(self):
+    # Replace line break with html <br> to render well
+	    self.render_text = self.content.replace('\n', '<br>')
+	    return render_str("post.html", p=self)
+
+    def renderNoButtons(self):
         # Replace line break with html <br> to render well
         self.render_text = self.content.replace('\n', '<br>')
         return render_str("post-no-buttons.html", p=self)
