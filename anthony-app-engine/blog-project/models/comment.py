@@ -1,9 +1,12 @@
 from google.appengine.ext import db
+from handlers import handler
 
-class Comment(db.Model):
+
+class Comment(db.Model, handler.Handler):
     comment = db.TextProperty(required=True)
     author = db.IntegerProperty(required=True)
 
-    def render(Handler):
+    def render(self):
         # Replace line break with html <br> to render well
-        return render_str("comment.html", c=self)
+        # call self to reference handler
+        return self.render_str("comment.html", c=self)

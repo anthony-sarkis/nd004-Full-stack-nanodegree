@@ -1,8 +1,10 @@
 from google.appengine.ext import db
 from helpers import hash_helpers
 
+
 def users_key(group='default'):
     return db.Key.from_path('users', group)
+
 
 class User(db.Model):
     name = db.StringProperty(required=True)
@@ -38,4 +40,3 @@ class User(db.Model):
         # check if user has valid password
         if u and hash_helpers.valid_pw(name, pw, u.pw_hash):
             return u
-

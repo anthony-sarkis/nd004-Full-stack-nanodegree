@@ -2,21 +2,20 @@
 import os
 import webapp2
 import jinja2
-import re
-import string
 from helpers import hash_helpers
 from google.appengine.ext import db
-from models import user, post, comment
+from models import user
 
-#from handlers import register
+
 # Define HTML template directory, load templates using Jinja
 # had as ".." prev in the handlers director
 template_dir = os.path.join(os.path.dirname(__file__), '..', 'html')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
+
 def blog_key(name='default'):
-    return db.Key.from_path('blogs', name)
+        return db.Key.from_path('blogs', name)
 
 
 # Primary handler to help with general functions
@@ -62,7 +61,7 @@ class Handler(webapp2.RequestHandler):
             self.user = uid and user.User.by_id(int(uid))
 
     # Create key. Find post from post_id
-    # Call int to transform string from URL into integer post ID        
+    # Call int to transform string from URL into integer post ID
     def get_post_key(self, post_id):
         x = db.Key.from_path('Post', int(post_id), parent=blog_key())
         return x

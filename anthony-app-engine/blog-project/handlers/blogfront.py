@@ -1,5 +1,6 @@
 from handlers import handler
-from models import post, user
+from models import post
+
 
 # render all posts blog front page
 class BlogFront(handler.Handler):
@@ -14,4 +15,5 @@ class BlogFront(handler.Handler):
         else:
             user_id = "notloggedin"
         # Render front page, pass "posts" variable as posts
-        self.render('front.html', posts=posts, user_id=user_id, error=error, alert=alert)
+        self.render('front.html', posts=posts, user_id=user_id,
+                    error=error, alert=alert)

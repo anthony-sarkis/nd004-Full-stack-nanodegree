@@ -1,22 +1,25 @@
 import re
 from handlers import handler
+from models import user
 
 # Define error handling functions for user creation
 # Allow a-z, A-Z, 0-0, _, - using regular expression
 # 3 - 20 characters
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+PASS_RE = re.compile(r"^.{3,20}$")
+EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
+
+
 def valid_username(username):
     return username and USER_RE.match(username)
 
 
 # Check password
-PASS_RE = re.compile(r"^.{3,20}$")
 def valid_password(password):
     return password and PASS_RE.match(password)
 
 
 # Check email
-EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 def valid_email(email):
     return email and EMAIL_RE.match(email)
 ################
@@ -26,7 +29,7 @@ class Signup(handler.Handler):
     # Render basic html page
     def get(self):
         self.render("blog-sign-up-form.html")
-    # primary data handler method
+
     def post(self):
         # have_error var is used to determine if we should redirect or not
         have_error = False
@@ -64,6 +67,7 @@ class Signup(handler.Handler):
     def done(self, *a, **kw):
         raise NotImplementedError
 
+
 # Registers a new user and logs them in. Handles errors by redireting.
 class Register(Signup):
     def done(self):
@@ -71,7 +75,7 @@ class Register(Signup):
         u = user.User.by_name(self.username)
         if u:
             msg = 'That user already exists. '
-            self.render('blog-sign-up-form.html', error_username = msg)
+            self.render('blog-sign-up-form.html', error_username=msg)
         else:
             u = user.User.register(self.username, self.password, self.email)
             u.put()

@@ -1,54 +1,47 @@
 
 {% extends "base.html" %}
+{% set active_page = "signup" %}
 
 {% block content %}
 
-<html>
-	<head>
-		<title> Udacity Blog SignUp Project </title>
-	</head>
 
-	<body>
-		<h1> Signup now </h1>
+<h1> Signup now </h1>
 
-		<form method="post">
-			<div>
-				<p>Username</p>
-				<input type="text" name="username" value="{{username}}">
-				<div>
-					{{error_username}}
-				</div>
-			</div>
-			
-			<div>
-				<p>Password</p>
-				<input type="password" name="password" value="">
-				<div>
-					{{error_password}}
-				</div>
-			</div>
+<form method="post">
+	<div>
+		<p>Username</p>
+		<input type="text" name="username" value="{{username}}">
+		<div>
+			{{error_username}}
+		</div>
+	</div>
+	
+	<div>
+		<p>Password</p>
+		<input type="password" name="password" value="">
+		<div>
+			{{error_password}}
+		</div>
+	</div>
 
-			<div>
-				<p>Verify Password</p>
-				<input type="password" name="verify" value="">
-				<div>
-					{{error_verify}}
-				</div>
-			</div>
+	<div>
+		<p>Verify Password</p>
+		<input type="password" name="verify" value="">
+		<div>
+			{{error_verify}}
+		</div>
+	</div>
 
-			<div>
-				<p>Email</p>
-				<input type="text" name="email" value="{{email}}">
-				<div>
-					{{error_email}}
-				</div>
-			</div>
+	<div>
+		<p>Email</p>
+		<input type="text" name="email" value="{{email}}">
+		<div>
+			{{error_email}}
+		</div>
+	</div>
 
-			<br>
-			<input type="submit" value="Signup" class="btn btn-success"> 
-		</form>
-	</body>
+	<br>
+	<input type="submit" value="Signup" class="btn btn-success"> 
 
-</html>
 
 {% endblock %}

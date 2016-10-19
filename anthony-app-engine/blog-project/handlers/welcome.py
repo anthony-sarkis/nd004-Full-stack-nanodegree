@@ -1,5 +1,6 @@
 from handlers import handler
 
+
 # Displays welcome page if valid user
 class Welcome(handler.Handler):
     def get(self):

@@ -1,5 +1,7 @@
 from handlers import handler
-from models import post
+from handler import blog_key
+from google.appengine.ext import db
+
 
 class DeletePost(handler.Handler):
     def get(self, post_id):
@@ -18,12 +20,13 @@ class DeletePost(handler.Handler):
             # Now that we have the correct "post" we can call properties of it
             created_by_edit = self.getUserID()
             created_by_actual = post.created_by
+            user_id = self.user.key().id()
 
             if created_by_actual == created_by_edit:
-                self.render("deletepost.html", post=post)
-                ## TODO   Undo function?
-            # Error handling if not valid user
-            # TODO Redirect to login page, then redirect back to delete page automatically
+                self.render("deletepost.html", post=post, user_id=user_id)
+                # TODO   Undo function?
+                # Error handling if not valid user
+                # TODO Redirect to login page, then redirect back automatically
             else:
                 error = "Please login to delete"
                 self.redirect('/login?error=' + error)
@@ -32,7 +35,7 @@ class DeletePost(handler.Handler):
             self.redirect('/login?error=' + error)
 
     def post(self, post_id):
-        # get from URL path the post key 
+        # get from URL path the post key
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
@@ -42,9 +45,10 @@ class DeletePost(handler.Handler):
         # If valid user, delete post and show success message
         if created_by_actual == created_by_edit:
             post.delete()
-            self.redirect('/deletesuccess')
+            alert = "Successfully deleted post"
+            self.redirect('/?alert=' + alert)
         # Error handling if not valid user
-        # TODO Redirect to login page, then redirect back to delete page automatically
+        # TODO Redirect to login page, then redirect back automatically
         else:
             error = "Please login to delete"
             self.redirect('/login?error=' + error)

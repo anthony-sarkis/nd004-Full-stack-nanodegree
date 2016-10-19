@@ -1,4 +1,7 @@
 from handlers import handler
+from google.appengine.ext import db
+from handler import blog_key
+
 
 class EditPost(handler.Handler):
     def get(self, post_id):
@@ -14,18 +17,20 @@ class EditPost(handler.Handler):
             return
 
         if self.user:
-            #created_by_edit = self.getUserID()  What's the difference?
+            # created_by_edit = self.getUserID()  What's the difference?
             created_by_edit = self.user.key().id()
             created_by_actual = post.created_by
 
             if created_by_actual == created_by_edit:
-                # Now that we have the correct "post" we can call properties of it
+                # Now that we have the correct "post"
+                # we can call properties of it
 
                 content = post.content
                 subject = post.subject
 
-                # Render page using Permalink HTML as a template, pass post var as post
-                self.render("editpost.html", content=content, subject=subject)
+                # Render page using Permalink HTML as a template,
+                # pass post var as post
+                self.render("editpost.html", content=content, subject=subject, user_id=created_by_edit)
             else:
                 error = "You don't have permission to edit this post. Please login as the user who created this post."
                 # maybe hide button entierly?
@@ -50,8 +55,8 @@ class EditPost(handler.Handler):
             # Handle if valid post
             if subject and content:
                 # Update the post
-                p = Post(key=key, parent=blog_key(), subject=subject,
-                         content=content, created_by=created_by_actual)
+                p = post.Post(key=key, parent=blog_key(), subject=subject,
+                              content=content, created_by=created_by_actual)
                 # Store element (p) in database
                 p.put()
                 # Redirect to blog page using ID of element
@@ -69,4 +74,3 @@ class EditPost(handler.Handler):
             error = "You don't have permission to edit this post. Please login as the user who created this post."
             # maybe hide button entierly? error message is long
             self.redirect('/?error=' + error)
-

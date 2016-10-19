@@ -1,4 +1,6 @@
 from handlers import handler
+from google.appengine.ext import db
+
 
 # Seems to be ok... but not sure if really happy with it.
 class DeleteComment(handler.Handler):
@@ -11,10 +13,9 @@ class DeleteComment(handler.Handler):
             return
 
         # Get comment key from second path
-        comment_key = db.Key.from_path('Comment', int(comment_id), parent=post_key)
+        comment_key = db.Key.from_path('Comment', int(comment_id),
+                                       parent=post_key)
         comment = db.get(comment_key)
-        # Access the comment itself from the comment class
-        original_comment = comment.comment
 
         # Permissions
         created_by_edit = self.getUserID()
@@ -22,10 +23,11 @@ class DeleteComment(handler.Handler):
         # If valid user, delete post and show success message
         if created_by_actual == created_by_edit:
             comment.delete()
-            #TODO Add success message
-            self.redirect('/')
+            alert = "Successfully deleted comment"
+            self.redirect('/?alert=' + alert)
         # Error handling if not valid user
-        # TODO Redirect to login page, then redirect back to delete page automatically
+        # TODO Redirect to login page, then redirect back to delete
+        # page automatically
         else:
             error = "Please login to delete"
             self.redirect('/login?error=' + error)

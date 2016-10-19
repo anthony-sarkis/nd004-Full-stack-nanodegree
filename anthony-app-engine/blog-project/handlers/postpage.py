@@ -1,4 +1,7 @@
 from handlers import handler
+from google.appengine.ext import db
+from models import comment
+
 
 # Render a specific post
 class PostPage(handler.Handler):
