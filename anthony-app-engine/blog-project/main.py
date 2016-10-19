@@ -9,13 +9,13 @@ from google.appengine.ext import db
 
 from models import user, post, comment
 from helpers import hash_helpers
-from handlers import handler, blogfront, deletecomment, deletepost, editcomment, editpost, likepost, login, logout, newcomment, newpost, postpage, register, welcome
-
+from handlers import handler, blogfront, deletecomment, deletepost, editcomment, editpost 
+from handlers import likepost, login, logout, newcomment, newpost, postpage, register, welcome
 
 app = webapp2.WSGIApplication([
+    ('/?', blogfront.BlogFront),
     ('/signup', register.Register),
     ('/welcome', welcome.Welcome),
-    ('/?', blogfront.BlogFront),
     ('/post/([0-9]+)', postpage.PostPage),
     ('/newpost', newpost.NewPost),
     ('/login', login.Login),

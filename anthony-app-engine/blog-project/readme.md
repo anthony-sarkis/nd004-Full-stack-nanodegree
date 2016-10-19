@@ -1,13 +1,17 @@
 
 Documentation for Multi-User Blog
 -------------
+Release v0.2 October 2016
 
 
 Files:
 ------------------------------------------------------------------------
-Python server code --> /blog-project.py
+Main entry and routes --> /main.py
+Handlers --> /handlers
+Models --> /models
+Helper functions --> /helpers
 HTML -> /html
-CSS -> /css  (Most of css uses inline bootstrap classes)
+CSS -> /css  (empty for now)
 
 
 Description:

@@ -4,44 +4,49 @@
 
 {% block content %}
 
-
-<h1> Signup now </h1>
-
-<form method="post">
-	<div>
-		<p>Username</p>
-		<input type="text" name="username" value="{{username}}">
-		<div>
-			{{error_username}}
-		</div>
-	</div>
+<div class="panel panel-primary">
 	
-	<div>
-		<p>Password</p>
-		<input type="password" name="password" value="">
-		<div>
-			{{error_password}}
-		</div>
+	<div class="panel panel-heading">
+		<h3 class="panel-title"> Signup now </h3>
 	</div>
 
-	<div>
-		<p>Verify Password</p>
-		<input type="password" name="verify" value="">
-		<div>
-			{{error_verify}}
-		</div>
+	<div class="panel-body">
+		<form method="post">
+			<div class="input-group">
+				<div>
+					<input type="text" name="username" value="{{username}}" class="form-control" placeholder="Username">
+					<div>
+						{{error_username}}
+					</div>
+				</div>
+				
+				<div>
+					<input type="password" name="password" value="" class="form-control" placeholder="Password">
+					<div>
+						{{error_password}}
+					</div>
+				</div>
+
+				<div>
+					<input type="password" name="verify" value="" class="form-control" placeholder="Verify Password">
+					<div>
+						{{error_verify}}
+					</div>
+				</div>
+
+				<div>
+					<input type="text" name="email" value="{{email}}" class="form-control" placeholder="Email">
+					<div>
+						{{error_email}}
+					</div>
+				</div>
+			</div> 
+
+			<br>
+			<input type="submit" value="Signup" class="btn btn-success">
+
+		</form>
 	</div>
-
-	<div>
-		<p>Email</p>
-		<input type="text" name="email" value="{{email}}">
-		<div>
-			{{error_email}}
-		</div>
-	</div>
-
-	<br>
-	<input type="submit" value="Signup" class="btn btn-success"> 
-
+</div>
 
 {% endblock %}

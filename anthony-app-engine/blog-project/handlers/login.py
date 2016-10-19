@@ -17,8 +17,11 @@ Login control flow
 class Login(handler.Handler):
     def get(self):
         error = self.request.get('error')
-        user_id = self.getUserID()
-        self.render('login-form.html', error=error, user_id=user_id)
+        if self.user:
+            user_id = self.getUserID()
+            self.render('login-form.html', error=error, user_id=user_id)
+        else:
+            self.render('login-form.html', error=error)
 
     def post(self):
         username = self.request.get('username')

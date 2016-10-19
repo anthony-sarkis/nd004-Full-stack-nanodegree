@@ -1,36 +1,30 @@
 
 {% extends "base.html" %}
-{% set active_page = "Home" %}
+{% set active_page = "home" %}
 <!-- Extend HTML from base html template -->
 
 {% block content %}
 	<!-- Render posts (var p) with html declared as safe -->
 	
-	{% if error %}
-		<div class="alert alert-danger"> {{error}} </div>
-	{% endif %}
-
-	{% if alert %}
-		<div class="alert alert-warning"> {{alert}} </div>
-	{% endif %}
-
-	{% for p in posts %}
-		{{ p.render() | safe }}
-		
-		<div>
-		<a href="/like/{{ p.key().id() }}" class=""> 
-		
-		{% if user_id in p.like %}
-			{{ "Unlike"}}
-		{% else %}
-			{{ "Like"}}
+		{% if error %}
+			<div class="alert alert-danger"> {{error}} </div>
 		{% endif %}
 
-		</a>
-		</div>
+		{% if alert %}
+			<div class="alert alert-warning"> {{alert}} </div>
+		{% endif %}
 
-		<br><br>
 
-	{% endfor %}
+	<div class="panel panel-default">
+		{% for p in posts %}
+			<div class="list-group-item">
+
+				{{ p.render() | safe }}
+
+			</div>
+
+		{% endfor %}
+
+	</div>
 
 {% endblock %}

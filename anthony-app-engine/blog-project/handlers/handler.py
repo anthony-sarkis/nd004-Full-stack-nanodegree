@@ -6,7 +6,6 @@ from helpers import hash_helpers
 from google.appengine.ext import db
 from models import user
 
-
 # Define HTML template directory, load templates using Jinja
 # had as ".." prev in the handlers director
 template_dir = os.path.join(os.path.dirname(__file__), '..', 'html')

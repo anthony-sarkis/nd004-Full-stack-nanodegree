@@ -31,7 +31,7 @@ class EditComment(handler.Handler):
 
     def post(self, post_id, comment_id):
         # Get variables passed from form
-        the_comment = self.request.get('comment')
+        updated_comment = self.request.get('comment')
         # assign post to a user using getUserbyID method
         author = self.getUserID()
         post_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -39,15 +39,16 @@ class EditComment(handler.Handler):
 
         comment_key = db.Key.from_path('Comment',
                                        int(comment_id), parent=post_key)
-        old_comment = db.get(comment_key)
+        old_comment_object = db.get(comment_key)
+        old_comment = old_comment_object.comment
 
         # Permissions, options could set here for editing
-        if self.user and old_comment.author == self.user.key().id():
+        if self.user and old_comment_object.author == self.user.key().id():
             # Handle if valid post
-            if comment:
+            if updated_comment:
                 # Create new post as p variable
                 c = comment.Comment(key=comment_key, parent=post_key,
-                                    comment=the_comment, author=author)
+                                    comment=updated_comment, author=author)
                 # Store element (p) in database
                 c.put()
                 # Redirect to blog page using ID of element
@@ -59,7 +60,7 @@ class EditComment(handler.Handler):
                 error = "Please write a comment"
                 # Render HTML page with variables passed
                 self.render("newcomment.html", post=post,
-                            error=error, comment=comment)
+                            error=error, comment=old_comment)
         else:
             error = "Please login to comment"
             self.redirect('/login?error=' + error)

@@ -8,15 +8,8 @@
 		</div>
 
 		<div>
-			<a href="/editcomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="btn btn-primary"> 
-				Edit
-			</a>
-		</div>
-
-		<div>
-			<a href="/deletecomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="btn btn-danger"> 
-				Delete
-			</a>
+			<a href="/editcomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="btn btn-sm btn-primary glyphicon glyphicon-edit"></a>
+			<a href="/deletecomment/{{ c.parent().key().id() }}/{{ c.key().id() }}" class="btn btn-sm btn-danger glyphicon glyphicon-trash"></a>
 		</div>
 
 	</div>

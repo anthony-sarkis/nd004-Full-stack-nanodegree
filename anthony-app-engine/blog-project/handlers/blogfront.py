@@ -12,8 +12,8 @@ class BlogFront(handler.Handler):
         # right way?
         if self.user:
             user_id = self.user.key().id()
-        else:
-            user_id = "notloggedin"
-        # Render front page, pass "posts" variable as posts
-        self.render('front.html', posts=posts, user_id=user_id,
+            # Render front page, pass "posts" variable as posts
+            self.render('front.html', posts=posts, user_id=user_id,
                     error=error, alert=alert)
+        else:
+            self.render('front.html', posts=posts, error=error, alert=alert)

@@ -9,6 +9,7 @@ class PostPage(handler.Handler):
         key = self.get_post_key(post_id)
         # Look up a specific item in the db using key
         post = db.get(key)
+        user_id = self.user.key().id()
 
         # working now!!! can use post or key?????
         comments = comment.Comment.all().ancestor(post)
@@ -19,4 +20,4 @@ class PostPage(handler.Handler):
             return
 
         # Render page using Permalink HTML as a template, pass post var as post
-        self.render("permalink.html", post=post, comments=comments)
+        self.render("permalink.html", post=post, comments=comments, user_id=user_id)

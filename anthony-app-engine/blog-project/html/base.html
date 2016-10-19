@@ -21,35 +21,62 @@
 </head>
 <body>
 
-	{% set navigation_bar = [
+	{% set navigation_bar_public = [
+	    ('/', 'home', 'Home'),
+	    ('/signup', 'signup', 'Signup'),
+	    ('/login', 'login', 'Login'),
+		] -%}
+	{% set active_page = active_page|default('home') -%}
+
+	{% set navigation_bar_private = [
 	    ('/', 'home', 'Home'),
 	    ('/newpost', 'newpost', 'New Post'),
+	    ('/logout', 'logout', 'Logout'),
 		] -%}
 	{% set active_page = active_page|default('home') -%}
 
 
-	<nav class="navbar navbar-default">
-		<ul id="navigation" class="nav navbar-nav">
+	<div class="container">
+		<div class="col-md-12">
 
-			{% for href, id, caption in navigation_bar %}
-			  <li 	{% if id == active_page %} class="active"{% endif %}>
-			  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
-			  </li>
-			{% endfor %}
+			<nav class="navbar navbar-default">
+				<ul id="navigation" class="nav navbar-nav">
 
-			{% if user_id %}
-				<li><a href="/logout" class="main-title"> Logout</a></li>
-			{% else %}
-				<li><a href="/login" class="main-title"> Login</a></li>
-				<li><a href="/signup" class="main-title"> Signup</a></li>
-			{% endif %}
+					{% for href, id, caption in navigation_bar %}
+					  <li 	{% if id == active_page %} class="active"{% endif %}>
+					  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
+					  </li>
+					{% endfor %}
 
-		</ul>
-	</nav>
+					{% if not user_id %}
 
-	<div id="content">
-		{% block content %}
-		{% endblock %}
+						{% for href, id, caption in navigation_bar_public %}
+						  <li 	{% if id == active_page %} class="active"{% endif %}>
+						  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
+						  </li>
+						{% endfor %}
+
+					{% else %}
+
+						{% for href, id, caption in navigation_bar_private %}
+						  <li 	{% if id == active_page %} class="active"{% endif %}>
+						  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
+						  </li>
+						{% endfor %}
+
+					{% endif %}
+
+				</ul>
+			</nav>
+		</div>
 	</div>
+
+	<div class="container">
+		<div class="col-md-12">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</div>
+
 </body>
 </html>

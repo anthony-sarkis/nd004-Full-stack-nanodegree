@@ -4,21 +4,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Editting comment</h2>
+
+<div class="panel panel-primary">
+
+  <div class="panel-heading">
+    <h4 class="panel-title">Editting comment</h4>
+  </div>
   
-  {{post.renderNoButtons() | safe}}
+  <div class="panel-body">
+    
+      {{post.renderNoButtons() | safe}}
 
     <form method="post">
       <label>
         <div>comment</div>
-        <textarea name="comment">{{comment}}</textarea>
+        <textarea name="comment" class="form-control">{{comment}}</textarea>
       </label>
 
       <div class="error">{{error}}</div>
 
       <input type="submit" value="Update Comment" class="btn btn-primary">
-    </form>
 
-    <a href="/" class="btn btn-sm btn-warning glyphicon glyphicon-ban-circle"> </a>
-    
+      <a href="/" class="btn btn-sm btn-warning glyphicon glyphicon-ban-circle"> </a>
+
+    </form>
+  </div>   
+</div>
+
 {% endblock %}

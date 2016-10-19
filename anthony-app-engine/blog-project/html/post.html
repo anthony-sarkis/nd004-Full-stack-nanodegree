@@ -1,6 +1,7 @@
 
 <div class="post">
 
+
 	<div class="page-header">
 		<h1>
 			{{p.subject}} <small> {{p.created.strftime("%b %d, %Y")}} </small>
@@ -12,18 +13,22 @@
 		<br> <br>
 	</div>
 
-	<a href="/edit/{{ p.key().id() }}" class="btn btn-sm btn-primary glyphicon glyphicon-edit"> </a>
+	<div class="panel-footer">
 
-	<a href="/newcomment/{{ p.key().id() }}" class="btn btn-sm btn-success glyphicon glyphicon-comment"> </a>
+		<div class="">
+			<a href="/edit/{{ p.key().id() }}" class="btn btn-sm btn-primary glyphicon glyphicon-edit"> </a>
 
-	<a href="/delete/{{ p.key().id() }}" class="btn btn-sm btn-danger glyphicon glyphicon-trash">
-		
-	</a>
+			<a href="/newcomment/{{ p.key().id() }}" class="btn btn-sm btn-success glyphicon glyphicon-comment"> </a>
 
-	<div class="post-likes" >
-		<span class="badge glyphicon glyphicon-thumbs-up">
-			{{p.likes_count}}  
-		</span>
+			<a href="/delete/{{ p.key().id() }}" class="btn btn-sm btn-danger glyphicon glyphicon-trash"> </a>
+
+			<div class="post-likes" >
+				<a href="/like/{{ p.key().id() }}" class="badge glyphicon glyphicon-thumbs-up"> 
+
+					{{p.likes_count}}
+
+				</a>
+			</div>
+		</div>
 	</div>
-
 </div>

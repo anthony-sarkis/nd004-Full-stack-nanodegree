@@ -1,6 +1,7 @@
 from handlers import handler
 from google.appengine.ext import db
 from handler import blog_key
+from models import post, user
 
 
 class EditPost(handler.Handler):
@@ -45,11 +46,11 @@ class EditPost(handler.Handler):
         content = self.request.get('content')
         # get from URL path the post key
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        post = db.get(key)
+        post_object = db.get(key)
 
         # Check permissions. If same user trying to edit is who created it
         created_by_edit = self.getUserID()
-        created_by_actual = post.created_by
+        created_by_actual = post_object.created_by
 
         if created_by_actual == created_by_edit:
             # Handle if valid post

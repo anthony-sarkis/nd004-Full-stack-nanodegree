@@ -4,24 +4,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Edit post</h2>
 
-    <form method="post">
-      <label>
-        <div>subject</div>
-        <input type="text" name="subject" value="{{subject}}">
-      </label>
+<div class="panel panel-primary">
 
-      <label>
-        <div>blog</div>
-        <textarea name="content">{{content}}</textarea>
-      </label>
+  <div class="panel-heading">
+    <h4 class="panel-title">Edit post</h4>
+  </div>
 
-      <div class="error">{{error}}</div>
+    <div class="panel-body">
+        <form method="post" >
+          
+            <div class="input-group">
+              <input type="text" name="subject" placeholder="Subject" value="{{subject}}" class="form-control">
 
-      <input type="submit" value="Update Post" class="btn btn-sm btn-primary">
-    </form>
+              <textarea name="content" placeholder="A journey of a thousand miles starts with one step..." class="form-control">{{content}}</textarea>
 
-    <a href="/" class="btn btn-sm btn-warning glyphicon glyphicon-ban-circle"> </a>
+              <div class="error">{{error}}</div>
+            </div>
+
+          <input type="submit" value="Update Post" class="btn btn-sm btn-primary">
+
+          <a href="/" class="btn btn-sm btn-warning glyphicon glyphicon-ban-circle"> </a>
+
+        </form>
+
+      </div>
+  </div>
 
 {% endblock %}
