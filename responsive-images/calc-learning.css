@@ -1,0 +1,12 @@
+ body {
+      margin: 0;
+    }
+    img {
+      float: left;
+      width: calc((100% - 20px)/3);
+      margin-right: 10px
+    }
+    
+  	img:last-of-type {
+  		margin-right: 0;
+  	}
