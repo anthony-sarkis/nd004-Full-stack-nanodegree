@@ -7,8 +7,21 @@
 */
 
 module.exports = function(grunt) {
+  /* require('load-grunt-tasks')(grunt);  */
+
+  grunt.loadNpmTasks('grunt-sass');
 
   grunt.initConfig({
+    sass: {
+        options: {
+            /* sourceMap: true */
+        },
+        dist: {
+                src: 'style.scss',
+                dest: 'style.css'
+          }
+        },
+
     responsive_images: {
       dev: {
         options: {
@@ -25,6 +38,7 @@ module.exports = function(grunt) {
           cwd: 'images_src/',
           dest: 'images/'
         }]
+
       }
     },
 
@@ -57,11 +71,15 @@ module.exports = function(grunt) {
     },
 
   });
-
-  grunt.loadNpmTasks('grunt-responsive-images');
+  
+  /* grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
+
   grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'responsive_images']);
+  */
+
+  grunt.registerTask('default', ['sass']);
 
 };
