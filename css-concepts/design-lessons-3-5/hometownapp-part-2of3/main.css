@@ -20,7 +20,7 @@ header, nav, footer, section, article, div {
   box-sizing: border-box;
 
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 
 }
 
