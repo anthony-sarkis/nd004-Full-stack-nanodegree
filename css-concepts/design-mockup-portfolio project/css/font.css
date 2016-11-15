@@ -1,0 +1,19 @@
+
+@font-face {
+  font-family: 'Crimson Text';
+  font-weight: 400;
+  font-style: normal;
+  src: url('../fonts/Crimson-Text-regular/Crimson-Text-regular.eot');
+  src: url('../fonts/Crimson-Text-regular/Crimson-Text-regular.eot?#iefix') format('embedded-opentype'),
+       local('Crimson Text'),
+       local('Crimson-Text-regular'),
+       url('../fonts/Crimson-Text-regular/Crimson-Text-regular.woff2') format('woff2'),
+       url('../fonts/Crimson-Text-regular/Crimson-Text-regular.woff') format('woff'),
+       url('../fonts/Crimson-Text-regular/Crimson-Text-regular.ttf') format('truetype'),
+       url('../fonts/Crimson-Text-regular/Crimson-Text-regular.svg#CrimsonText') format('svg');
+}
+
+/*
+ @font-face css and font file generation from http://www.localfont.com/
+ font license contained in ../fonts/Crimson-Text-regular/LICENSE.txt 
+*/

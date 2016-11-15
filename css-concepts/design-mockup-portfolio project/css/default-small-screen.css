@@ -1,0 +1,79 @@
+.container {
+	display: -webkit-flex;
+	display: flex;
+	-wbekit-flex-flow: row wrap;
+	flex-flow: row wrap;
+
+	padding: 10px;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/* Hero section */
+.hero {
+	width: 100%;
+}
+.hero img {
+	width: 100%;
+	max-height: 600px;
+}
+/* Hero section */
+
+
+/* Header section */
+.header {
+	display: block; /* IMPORTANT */
+	width: 100%; /* IMPORTANT */
+	min-height: 100px;
+	padding-bottom: 30px;
+	padding-top: 30px;
+}
+	.logo {
+		width: 100%;
+	}
+	.logo img {
+		width: 60px;
+	}
+	.title {
+		width: 100%;
+		text-align: left;
+	}
+	.title h1, h3 {
+		margin: 0;
+		padding-top: 5px;
+	}
+/* Header section */
+
+
+/* Gallery section */
+.gallery {
+	display: block;
+	width: 100%;
+}
+	.gallery-title {
+		width: 100%;
+	}
+	.gallery-item img {
+		width: 80%;
+		padding: 15px;
+		padding-bottom: 40px;
+	}
+	.gallery-item h3, p {
+		padding: 30px;
+		padding-bottom: 0;
+		padding-top: 0;
+		font-size: 1.2em;
+		margin-top: 10px;
+	}
+	.gallery-item h3 {
+		padding-top: 15px;
+	}
+	.gallery-item:nth-of-type(2) {
+		background-color: #f7f7f7;
+	}
+	.gallery-item:nth-of-type(1) {
+		background-color: #fcfdff;
+	}
+/* Gallery section */

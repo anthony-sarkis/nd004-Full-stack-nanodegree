@@ -5,7 +5,13 @@
 	<head>
 		<title>Sarkis Portfolio</title>
 
+		<link rel="stylesheet" type="text/css" href="../css/font.css">
 		<link rel="stylesheet" type="text/css" href="../css/style.css">
+
+		<link rel="stylesheet" type="text/css" href="../css/default-small-screen.css">
+		<link rel="stylesheet" type="text/css" href="../css/medium-screen.css">
+		<link rel="stylesheet" type="text/css" href="../css/large-screen.css">
+
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
@@ -14,59 +20,68 @@
 
 	<body class="container">
 
+
+		<!-- Start header section -->
 		<div class="header">
-			
 			<div class="logo">
-				<img src="../images/Marcus_Aurelius-logo.svg">
+				<img src="../images/Marcus_Aurelius-logo.svg" alt="Logo featuring Marcus Aurelius bust">
 				<!-- image source: http://www.wpclipart.com/world_history/civilizations/Roman/famous/Marcus_Aurelius.png.html -->
 			</div>
-
 			<div class="title">
 				<h1>Anthony Sarkis</h1>
 				<h3>The pleasure of finding things out.</h3>
 			</div>
-
-			<hr>
-
 		</div>
+		<!-- End header section -->
 
 
+		<!-- Start hero section -->
 		<div class="hero">
-			<img src="../images/Cole_Thomas_Empire_1836@1x.jpg" 
-				srcset="../images/Cole_Thomas_Empire_1836@1x.jpg 200w, 
-				../images/Cole_Thomas_Empire_1836@2x.jpg 400w, 
-				../images/Cole_Thomas_Empire_1836.jpg 1000w">
+			<img src="../images/Cole_Thomas_Empire_1836.jpg" alt="Painting Cole Thomas Empire 1836"
+				srcset="../images/Cole_Thomas_Empire_1836_mobile.jpg 350w, 
+				../images/Cole_Thomas_Empire_1836.jpg 700w,
+				../images/Cole_Thomas_Empire_1836@2x.jpg 1400w" sizes="100vw">
+				<!-- image source: This work has been identified as being free of known restrictions under copyright law, including all related and neighboring rights. -->
 		</div>
+		<!-- End hero section -->
+
+
+		<!-- Start gallery section -->
 
 		<div class="gallery-title">
 				<h2>Featured Work</h2>
 		</div>
-
 		<div class="gallery">
-
 			<div class="gallery-item">
 			<a href="http://sarkis-blog.appspot.com/" target="_blank">
 				<h3>Multi-User Blog</h3>
+				<p>A program that generates a multi-user blog</p>
 				<img src="../images/multi-user-blog.PNG" alt="Blog screenshot">
+				<!-- image source: Author -->
 			</a>
+			<p> 
 			</div>
 
 			<div class="gallery-item">
 			<a href="https://github.com/swirlingsand/fullstack-nanodegree-vm/tree/master/vagrant/tournament" target="_blank">
 				<h3>PostGreSQL</h3>
+				<p>A swiss style tournament database using psql.</p>
 				<img src="../images/Postgresql_elephant.svg" alt="PostGreSQL elephant logo">
+				<!-- image source: see SVG file. -->
 			</a>
 			</div>
 
 			<div class="gallery-item">
 			<a href="https://github.com/swirlingsand/nd004-Full-stack-nanodegree/tree/master/Movies%20project/Movies" target="_blank">
 				<h3>Movie Trailer Fun</h3>
+				<p>A program that generates a tiny HTML site.</p>
 				<img src="../images/movies-project.PNG" alt="Movies project screenshot">
+				<!-- image source: Author -->
 			</a>
 			</div>
-
 		</div>
-	
-	</body>
+		<!-- end gallery section -->
 
+
+	</body>
 </html>
