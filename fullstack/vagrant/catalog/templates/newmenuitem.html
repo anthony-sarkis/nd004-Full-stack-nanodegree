@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1> New Menu Item </h1>
+
+<form action="{{ url_for('routes.newMenuItem',restaurant_id = restaurant_id )}}" method = 'post'>
+
+<dl>
+	<dt>Name:</dt>
+		<dd><input type ='text' name='name' placeholder="name"></dd>
+	<dt>Description:</dt>
+		<dd><textarea name = 'description' rows='5' cols='40' placeholder="description"></textarea></dd>
+	<dt>Price:</dt>
+		<dd><input type = 'text' name='price' placeholder="price"></dd>
+	<dt>Course:</dt>
+
+	<dd><input type ='radio' name='course' value='Appetizer' >Appetizer</dd>
+	<dd><input type ='radio' name='course' value='Entree'>Entree</dd>
+	<dd><input type ='radio' name='course' value='Dessert'>Dessert</dd>
+	<dd><input type ='radio' name='course' value='Beverage'>Beverage</dd>
+</dl>
+
+
+<input type='submit' value='Create'>
+
+</form>
+
+<a href = '{{url_for('routes.allRestaurants')}}'> Cancel </a>
+
+
+
+{% endblock %}

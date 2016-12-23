@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1> Saturn's top rated restaurants </h1>
+
+<a href="/restaurants"> View all Restaurants </a>
+</br>
+<a href="/restaurant/new"> Create your own restaurant today! </a>
+
+</br>
+</br>
+
+<h2> API's available: </h2>
+	<ul>
+		<li>
+			<a href="/restaurants/JSON"> Return all restaurants in JSON format </a>
+		</li>
+
+		<li>
+			<a href="/restaurant/9/JSON"> Return a restaurant in JSON format </a>
+		</li>
+		<li>
+
+			<a href="/restaurant/9/menu/56/JSON"> Return a menu item in JSON format </a>
+		</li>
+	</ul>
+
+
+{% endblock %}

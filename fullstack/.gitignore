@@ -1,0 +1,5 @@
+vagrant/.vagrant/machines/default/virtualbox/action_provision
+vagrant/.vagrant/machines/default/virtualbox/action_set_name
+*.pyc
+vagrant/.vagrant/machines/default/virtualbox/synced_folders
+vagrant/.vagrant/machines/default/virtualbox/private_key
