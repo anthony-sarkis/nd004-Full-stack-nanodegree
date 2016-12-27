@@ -13,3 +13,4 @@ from .newMenuItem import newMenuItem
 from .editMenuItem import editMenuItem
 
 from .home import home
+from .login import login
