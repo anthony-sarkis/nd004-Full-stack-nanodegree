@@ -5,8 +5,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-		<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='style.css') }}">
+	<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='style.css') }}">
 	<title></title>
+
+	 <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"> </script>
+	<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+	<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+
 </head>
 <body>
 	<div class="container">
@@ -86,7 +92,7 @@
 		</div>
 		<!-- end page content -->
 
-		<!-- #TODO, footer here? >
+		<!-- #TODO, footer here? -->
 
 	</div>
 </body>
