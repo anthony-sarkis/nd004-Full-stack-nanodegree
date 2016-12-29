@@ -76,6 +76,9 @@ def gconnect():
     login_session['credentials'] = credentials
     login_session['gplus_id'] = gplus_id
 
+    # List provider
+    login_session['provider'] = 'google'
+
     # Added to fix disconnect bug
     login_session['access_token'] = credentials.access_token
 

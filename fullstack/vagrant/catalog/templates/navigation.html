@@ -2,7 +2,7 @@
 <!-- Public nav -->
 <div class="navigation">
 
-{% if session.get('logged_in') %}
+{% if not session['access_token'] %}
 	{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
 		    ('/restaurants', 'x', 'Restaurants'),

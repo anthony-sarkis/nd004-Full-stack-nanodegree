@@ -18,6 +18,8 @@ from .home import home
 
 # Login
 from .login import login
+from .logout import logout
+
 from .gconnect import gconnect, gconnectTest
 from .gdisconnect import gdisconnect
 from .facebook import fbconnect, fbdisconnect
