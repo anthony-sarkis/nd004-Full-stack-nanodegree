@@ -31,6 +31,8 @@ Getting started:
 ------------------------------------------------------------------------
 
 
+** Project requires a client_secrets.json file in the /catalog directory.
+
 To run locally:
 
 Please note this runs in the Vagrant environment, included in /vagrant

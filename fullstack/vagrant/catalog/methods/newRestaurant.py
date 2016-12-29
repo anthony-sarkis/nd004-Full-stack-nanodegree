@@ -9,7 +9,8 @@ session = sessionMaker.newSession()
 @routes.route('/restaurant/new', methods=['GET', 'POST'])
 def newRestaurant():
     if request.method == 'POST':
-        newRestaurant = Restaurant(name=request.form['name'])
+        newRestaurant = Restaurant(name=request.form['name'],
+                                   user_id=login_session['user_id'])
         session.add(newRestaurant)
         session.commit()
         flash("Now we are cooking! Restaurant created.")

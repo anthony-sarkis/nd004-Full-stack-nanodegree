@@ -6,7 +6,7 @@ import json
 import requests
 import httplib2
 import os
-
+from methods import userMethods
 
 up_one_folder = os.path.join(os.path.dirname(__file__), '..')
 client_secrets_json_path = up_one_folder + '/client_secrets.json'
@@ -89,6 +89,13 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+
+    user_id = userMethods.getUserID(login_session['email'])
+    login_session['user_id'] = user_id
+
+    # Create user if no existing user id for email
+    if not user_id:
+        userMethods.createUser(login_session)
 
     # important, flask need a return statement here otherwise get value
     # error...

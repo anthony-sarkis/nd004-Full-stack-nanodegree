@@ -10,7 +10,7 @@ from database_setup import Base
 
 
 def newSession():
-    engine = create_engine('sqlite:///restaurantmenu.db')
+    engine = create_engine('sqlite:///restaurantmenuwithusers.db')
     Base.metadata.bind = engine
 
     DBSession = sessionmaker(bind=engine)

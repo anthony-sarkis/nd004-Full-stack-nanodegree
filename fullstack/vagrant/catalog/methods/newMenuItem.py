@@ -28,6 +28,8 @@ def newMenuItem(restaurant_id):
         session.add(newItem)
         session.commit()
         flash("Now we are cooking! Menu item created.")
-        return redirect(url_for('routes.showRestaurant', restaurant_id=restaurant_id))
+        return redirect(url_for('routes.showRestaurant',
+                                restaurant_id=restaurant_id,
+                                user_id=login_session['user_id']))
     else:
         return render_template('newmenuitem.html', restaurant_id=restaurant_id)

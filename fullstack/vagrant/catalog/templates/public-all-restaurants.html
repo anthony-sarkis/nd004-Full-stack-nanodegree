@@ -4,18 +4,12 @@
 
 <h1>All restaurants</h1>
 
-	<div class="">
-		<a href="{{url_for('routes.newRestaurant')}}">
-		New restaurant
-	</a>
-
 {% for r in restaurants %}
 
 <div>
 
     <div class = 'name'>
 		<p>{{r.name}}</p>
-		{{r.user_id}}
 	</div>
 
 	</div>
@@ -25,23 +19,10 @@
 		View menu
 	</a>
 
-	<div class="">
-		<a href="{{url_for('routes.editRestaurant', restaurant_id = r.id)}}">
-		Edit
-	</a>
-
-	</br>
-
-	<a href="{{url_for('routes.deleteRestaurant', restaurant_id = r.id)}}">
-		Delete
-	</a>
-
 	</br>
 	</br>
 
 </div>
 
 {% endfor %}
-
-
 {% endblock %}

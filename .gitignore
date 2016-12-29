@@ -3,3 +3,4 @@ node_modules
 .npm-debug.log
 tmp
 fullstack/vagrant/catalog/client_secrets.json
+fullstack/vagrant/catalog/fb_client_secrets.json

@@ -20,3 +20,4 @@ from .home import home
 from .login import login
 from .gconnect import gconnect, gconnectTest
 from .gdisconnect import gdisconnect
+from .facebook import fbconnect, fbdisconnect

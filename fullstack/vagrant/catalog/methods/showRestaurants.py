@@ -2,6 +2,8 @@ from flask import render_template, jsonify, url_for, flash
 from . import routes
 from helpers import sessionMaker
 from database_setup import Restaurant, MenuItem
+from methods import userMethods
+from flask import session as login_session
 
 session = sessionMaker.newSession()
 
@@ -11,16 +13,28 @@ session = sessionMaker.newSession()
 def showRestaurant(restaurant_id):
     restaurant = session.query(
         Restaurant).filter_by(id=restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id)
-    return render_template('menu.html', restaurant=restaurant,
-                           items=items, restaurant_id=restaurant_id)
+    items = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id).all()
+    # Permissions
+    creator = userMethods.getUserInfo(restaurant.user_id)
+
+    if 'username' not in login_session or creator.id != login_session['user_id']:
+        return render_template('public-menu.html', restaurant=restaurant,
+                               items=items, restaurant_id=restaurant_id)
+    else:
+        return render_template('menu.html', restaurant=restaurant,
+                               items=items, restaurant_id=restaurant_id)
 
 
 # return all restaurants
 @routes.route("/restaurants")
 def allRestaurants():
     restaurants = session.query(Restaurant).all()
-    return render_template('allrestaurants.html', restaurants=restaurants)
+
+    if 'username' not in login_session:
+        return render_template('public-all-restaurants.html', restaurants=restaurants)
+    else:
+        return render_template('allrestaurants.html', restaurants=restaurants)
 
 
 # API endpoints

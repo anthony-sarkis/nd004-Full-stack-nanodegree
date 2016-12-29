@@ -19,20 +19,25 @@
 		
 		<!-- insert navigation -->
 		<div class="navigation">
-						
+		{% if 'username' not in session %}
+			
 			{% set navigation_bar_public = [
 				    ('/', 'home', 'Home'),
-				    ('/restaurant/new', 'x', 'New Restaurant'),
+				    ('/restaurants', 'x', 'Restaurants'),
 				    ('/login', 'login', 'Login'),
 					] -%}
-				{% set active_page = active_page|default('home') -%}
-
-				{% set navigation_bar_private = [
+			{% set active_page = active_page|default('home') -%}
+		
+		{% else %}
+			
+			{% set navigation_bar_private = [
 				    ('/', 'home', 'Home'),
-				    ('/newpost', 'newpost', 'New Post'),
+				    ('/restaurant/new', 'x', 'New Restaurant'),
 				    ('/logout', 'logout', 'Logout'),
 					] -%}
-				{% set active_page = active_page|default('home') -%}
+			{% set active_page = active_page|default('home') -%}
+			
+		{% endif %}
 
 			<div class="">
 
