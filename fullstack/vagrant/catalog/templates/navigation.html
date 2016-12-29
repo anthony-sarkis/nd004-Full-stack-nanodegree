@@ -1,2 +1,36 @@
-# Move navigation to here and use # includes to call it
 
+<!-- Public nav -->
+<div class="navigation">
+
+{% if session.get('logged_in') %}
+	{% set navigation_bar = [
+		    ('/', 'home', 'Home'),
+		    ('/restaurants', 'x', 'Restaurants'),
+		    ('/login', 'login', 'Login'),
+			] -%}
+		{% set active_page = active_page|default('home') -%}
+
+<!-- Private nav -->
+{% else %}
+		{% set navigation_bar = [
+		    ('/', 'home', 'Home'),
+		    ('/restaurant/new', 'x', 'New Restaurant'),
+		    ('/logout', 'logout', 'Logout'),
+			] -%}
+		{% set active_page = active_page|default('home') -%}
+{% endif %}
+
+	<div class="">
+		<nav class="navbar navbar-default">
+			<ul id="navigation" class="nav navbar-nav">
+				{% for href, id, caption in navigation_bar %}
+					  <li 	{% if id == active_page %} class="active"{% endif %}>
+					  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
+					  </li>
+				{% endfor %}
+			</ul>
+		</nav>
+	</div>
+
+</div>
+<!-- end navigation -->

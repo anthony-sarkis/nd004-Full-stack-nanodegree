@@ -18,77 +18,10 @@
 	<div class="container">
 		
 		<!-- insert navigation -->
-		<div class="navigation">
-		{% if 'username' not in session %}
-			
-			{% set navigation_bar_public = [
-				    ('/', 'home', 'Home'),
-				    ('/restaurants', 'x', 'Restaurants'),
-				    ('/login', 'login', 'Login'),
-					] -%}
-			{% set active_page = active_page|default('home') -%}
-		
-		{% else %}
-			
-			{% set navigation_bar_private = [
-				    ('/', 'home', 'Home'),
-				    ('/restaurant/new', 'x', 'New Restaurant'),
-				    ('/logout', 'logout', 'Logout'),
-					] -%}
-			{% set active_page = active_page|default('home') -%}
-			
-		{% endif %}
+		{% include "navigation.html" %}
 
-			<div class="">
-
-					<nav class="navbar navbar-default">
-						<ul id="navigation" class="nav navbar-nav">
-
-							{% for href, id, caption in navigation_bar %}
-							  <li 	{% if id == active_page %} class="active"{% endif %}>
-							  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
-							  </li>
-							{% endfor %}
-
-							{% if not user_id %}
-
-								{% for href, id, caption in navigation_bar_public %}
-								  <li 	{% if id == active_page %} class="active"{% endif %}>
-								  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
-								  </li>
-								{% endfor %}
-
-							{% else %}
-
-								{% for href, id, caption in navigation_bar_private %}
-								  <li 	{% if id == active_page %} class="active"{% endif %}>
-								  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
-								  </li>
-								{% endfor %}
-
-							{% endif %}
-
-						</ul>
-					</nav>
-			</div>
-		</div>
-		<!-- end navigation -->
-
-
-		<!-- message handling -->
-		<div class="messages">
-			{% with messages = get_flashed_messages() %}
-			{% if messages %}
-
-			<ul>
-			{% for message in messages %}
-			  {{message}}
-			  {% endfor %}
-			</ul>
-			{% endif %}
-			{% endwith %}
-		</div>
-		<!-- messages -->
+		<!-- insert handling -->
+		{% include "messages.html" %}
 
 		<!-- insert page content -->
 		<div class="main_content">
