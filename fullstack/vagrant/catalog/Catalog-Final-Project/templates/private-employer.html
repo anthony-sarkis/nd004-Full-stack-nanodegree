@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1>{{employer.name}}</h1>
+
+<a href="{{url_for('routes.newJob', employer_id = employer.id, job_id = jobs.id )}}">
+	Create new job
+</a>
+
+<a href="{{url_for('routes.deleteEmployer', employer_id = employer.id )}}">
+	Delete Employer
+</a>
+
+<div class="">
+	<a href="{{url_for('routes.editEmployer', employer_id = employer.id)}}">
+	Edit
+</a>
+
+
+{% for i in jobs %}
+
+<div>
+
+    <div class = 'nameAndPrice'>
+		<span class = 'name'><p>{{i.name}}</p></span>
+
+		<span class = 'salary'>
+
+
+		<p>{{i.salary}} </p>
+	</span>
+	</div>
+
+	<div class="description">
+		<p>{{i.description}}</p>
+	</div>
+
+
+	</div>
+
+		<div class="editdeletepane">
+			<a href="{{url_for('routes.editJob', employer_id = employer.id, job_id = i.id)}}">
+			Edit
+		</a>
+
+		</br>
+
+		<a href="{{url_for('routes.deleteJob', employer_id = employer.id, job_id = i.id )}}">
+			Delete
+		</a>
+
+		</br>
+
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

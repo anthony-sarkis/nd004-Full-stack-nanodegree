@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1> New Job Item </h1>
+
+<form action="{{ url_for('routes.newJob',employer_id = employer_id )}}" method = 'post'>
+
+<dl>
+	<dt>header:</dt>
+		<dd><input type ='text' name='header' placeholder="header"></dd>
+	<dt>Description:</dt>
+		<dd><textarea name = 'description' rows='5' cols='40' placeholder="description"></textarea></dd>
+	<dt>Salary:</dt>
+		<dd><input type = 'text' name='salary' placeholder="salary"></dd>
+	<dt>Category:</dt>
+
+	<dd><input type ='radio' name='category' value='Appetizer' >Appetizer</dd>
+	<dd><input type ='radio' name='category' value='Entree'>Entree</dd>
+	<dd><input type ='radio' name='category' value='Dessert'>Dessert</dd>
+	<dd><input type ='radio' name='category' value='Beverage'>Beverage</dd>
+</dl>
+
+
+<input type='submit' value='Create'>
+
+</form>
+
+<a href = '{{url_for('routes.viewAllEmployers')}}'> Cancel </a>
+
+
+
+{% endblock %}

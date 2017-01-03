@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1>{{employer.name}}</h1>
+
+{% for i in jobs %}
+
+<div>
+    <div class = 'nameAndPrice'>
+		<span class = 'header'><p>{{i.header}}</p></span>
+		<span class = 'salary'>
+		<p>{{i.salary}} </p>
+	</span>
+	</div>
+
+	<div class="description">
+		<p>{{i.description}}</p>
+	</div>
+	</div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+
+<!-- Public nav -->
+<div class="navigation">
+
+{% if not session['access_token'] %}
+	{% set navigation_bar = [
+		    ('/', 'home', 'Home'),
+		    ('/employers', 'x', 'Employers'),
+		    ('/login', 'login', 'Login'),
+			] -%}
+		{% set active_page = active_page|default('home') -%}
+
+<!-- Private nav -->
+{% else %}
+		{% set navigation_bar = [
+		    ('/', 'home', 'Home'),
+		    ('/employer/new', 'x', 'New employer'),
+		    ('/logout', 'logout', 'Logout'),
+			] -%}
+		{% set active_page = active_page|default('home') -%}
+{% endif %}
+
+	<div class="">
+		<nav class="navbar navbar-default">
+			<ul id="navigation" class="nav navbar-nav">
+				{% for href, id, caption in navigation_bar %}
+					  <li 	{% if id == active_page %} class="active"{% endif %}>
+					  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
+					  </li>
+				{% endfor %}
+			</ul>
+		</nav>
+	</div>
+
+</div>
+<!-- end navigation -->

@@ -4,3 +4,7 @@ node_modules
 tmp
 fullstack/vagrant/catalog/client_secrets.json
 fullstack/vagrant/catalog/fb_client_secrets.json
+fullstack/vagrant/catalog/Catalog-Final-Project/methods/login/client_secrets.json
+fullstack/vagrant/catalog/Catalog-Final-Project/methods/login/fb_client_secrets.json
+fullstack/vagrant/catalog/Restaurant-catalog-mini-project/client_secrets.json
+fullstack/vagrant/catalog/Restaurant-catalog-mini-project/fb_client_secrets.json

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1>All restaurants</h1>
+
+{% for r in restaurants %}
+
+<div>
+
+    <div class = 'name'>
+		<p>{{r.name}}</p>
+	</div>
+
+	</div>
+
+	<div class="">
+		<a href="{{url_for('routes.showRestaurant', restaurant_id = r.id)}}">
+		View menu
+	</a>
+
+	</br>
+	</br>
+
+</div>
+
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1> Are you sure you want to delete {{job.name}}? </h1>
+
+<form action="{{ url_for('routes.deleteMenuItem', employer_id = job.employer_id, job_id=job.id)}}" method = 'post'>
+
+	<input type='submit', value = 'Delete'>
+
+</form>
+
+<a href = "{{ url_for('routes.showRestaurant', employer_id = job.employer_id)}}"> Cancel </a>
+
+
+{% endblock %}
