@@ -10,15 +10,15 @@ from methods import userMethods, routes
 
 @routes.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    folder = os.getcwd()
+    client_secrets_json_path = folder + '/methods/login/fb_client_secrets.json'
+
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     access_token = request.data
     print "access token received %s " % access_token
-
-    folder = os.getcwd()
-    client_secrets_json_path = folder + '/methods/login/fb_client_secrets.json'
 
     app_id = json.loads(open(client_secrets_json_path, 'r').read())[
         'web']['app_id']
@@ -40,7 +40,7 @@ def fbconnect():
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
     data = json.loads(result)
-    login_session['provider_facebook'] = 'facebook'
+    login_session['provider'] = 'facebook'
     login_session['username'] = data["name"]
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
@@ -81,12 +81,14 @@ def fbconnect():
 @routes.route('/fbdisconnect')
 def fbdisconnect():
     facebook_id = login_session['facebook_id']
-    # The access token must me included to successfully logout
     access_token = login_session['access_token']
+
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
         facebook_id, access_token)
+    #url = 'https://graph.facebook.com/%s/permissions' % (facebook_id)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    del login_session['provider_facebook']
 
-    return "you have been logged out"
+    print result
+
+    return "test"
