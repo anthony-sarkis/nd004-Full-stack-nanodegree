@@ -14,11 +14,10 @@
 	<dt>Salary:</dt>
 		<dd><input type = 'text' name='salary' placeholder="salary"></dd>
 	<dt>Category:</dt>
+	{% for i in categories %}
+		<dd><input type ='radio' name='category' value='{{i.name}}'>{{i.name}}</dd>
+	{% endfor %}
 
-	<dd><input type ='radio' name='category' value='Appetizer' >Appetizer</dd>
-	<dd><input type ='radio' name='category' value='Entree'>Entree</dd>
-	<dd><input type ='radio' name='category' value='Dessert'>Dessert</dd>
-	<dd><input type ='radio' name='category' value='Beverage'>Beverage</dd>
 </dl>
 
 

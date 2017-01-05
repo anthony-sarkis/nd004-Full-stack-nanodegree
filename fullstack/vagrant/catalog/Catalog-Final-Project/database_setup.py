@@ -35,6 +35,13 @@ class Employer(Base):
         }
 
 
+class Category(Base):
+    __tablename__ = 'category'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250))
+
+
 class Job(Base):
     __tablename__ = 'job'
 
@@ -42,7 +49,8 @@ class Job(Base):
     header = Column(String(80), nullable=False)
     description = Column(String(80))
     salary = Column(String(8))
-    category = Column(String(250))
+    category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship(Category)
     employer_id = Column(Integer, ForeignKey('employer.id'))
     employer = relationship(Employer)
     user_id = Column(Integer, ForeignKey('user.id'))

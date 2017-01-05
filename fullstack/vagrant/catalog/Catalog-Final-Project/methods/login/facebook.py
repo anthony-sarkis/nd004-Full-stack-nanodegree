@@ -49,6 +49,7 @@ def fbconnect():
     # logout, let's strip out the information before the equals sign in our
     # token
     stored_token = token.split("=")[1]
+
     login_session['access_token'] = stored_token
 
     # Get user picture
@@ -85,10 +86,19 @@ def fbdisconnect():
 
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
         facebook_id, access_token)
-    #url = 'https://graph.facebook.com/%s/permissions' % (facebook_id)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
 
     print result
 
-    return "test"
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+
+    flash("Now logged in as %s" % login_session['username'])
+    return output

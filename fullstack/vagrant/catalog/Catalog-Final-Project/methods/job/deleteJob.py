@@ -1,5 +1,5 @@
 """
-Functions related to deleting menu jobs
+Functions related to deleting jobs
 """
 
 from flask import render_template, url_for, flash, request, redirect

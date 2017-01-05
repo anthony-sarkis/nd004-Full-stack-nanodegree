@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1>{{category.name}}</h1>
+
+{% for i in jobs %}
+
+<div>
+
+<div class = ''>
+	<span class = 'name'>
+		<a href="{{url_for('routes.viewJob', job_id=i.id)}}">{{i.header}}</a>
+	</span>
+
+	<span class = 'salary'>
+		<p>{{i.salary}} </p>
+	</span>
+
+	<span class = 'category'>
+		<p>{{i.employer.name}}</p>
+	</span>
+
+	<div class="description">
+		<p>{{i.description}}</p>
+	</div>
+
+	<br/> <br/>
+</div>
+
+
+{% endfor %}
+
+
+{% endblock %}
