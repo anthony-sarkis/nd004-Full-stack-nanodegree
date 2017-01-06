@@ -8,14 +8,20 @@
 
 <dl>
 	<dt>Header:</dt>
-		<dd><input type ='text' name='header' value = '{{job.header }}'></dd>
+		<dd><input type ='text' name='header' value = '{{job.header}}'></dd>
 	<dt>Description:</dt>
-		<dd><textarea name = 'description' rows='5' cols='40' value = '{{job.description }}'></textarea></dd>
+		<dd><input type ='text' name = 'description' rows='5' cols='40' value = '{{job.description}}'></dd>
 	<dt>Salary:</dt>
 		<dd><input type = 'text' name='salary' value = '{{job.salary}}'></dd>
 	<dt>Category:</dt>
-	{% for i in categories %}
-		<dd><input type ='radio' name='category' value='{{i.id}}'>{{i.name}}</dd>
+	{% for category in categories %}
+		
+		{% if category.name == job.category.name %}
+			<dd><input type ='radio' name='category' value='{{category.id}}' checked="checked" >{{category.name}}</dd>
+		{% else %}
+			<dd><input type ='radio' name='category' value='{{category.id}}'>{{category.name}}</dd>
+		{% endif %}
+
 	{% endfor %}
 
 </dl>

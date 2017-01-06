@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, url_for, flash
 from helpers import sessionMaker
-from database_setup import Employer, Job
+from database_setup import Employer, Job, Category
 from methods import routes, userMethods
 from flask import session as login_session
 
@@ -54,7 +54,7 @@ def viewEmployerJSON(employer_id):
 
 
 # Return a job item in JSON format
-@routes.route("/employer/<int:employer_id>/jobs/<int:job_id>/JSON")
+@routes.route("/employer/<int:employer_id>/job/<int:job_id>/JSON")
 def viewEmployerJobJSON(employer_id, job_id):
     item = session.query(Job).filter_by(id=job_id).one()
     return jsonify(Job=[item.serialize])

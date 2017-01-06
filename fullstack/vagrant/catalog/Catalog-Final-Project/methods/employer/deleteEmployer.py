@@ -1,5 +1,5 @@
 """
-Functions related to deleting restaurants
+Functions related to deleting employers
 """
 
 from flask import render_template, url_for, flash, request, redirect
@@ -13,11 +13,11 @@ session = sessionMaker.newSession()
 """
 deleteEmployer function description:
 On GET request: renders delete confirmation page.
-On POST request: deletes restaurant and updates user.
+On POST request: deletes employer and updates user.
 """
 
 
-@routes.route('/restaurant/<int:employer_id>/delete',
+@routes.route('/employer/<int:employer_id>/delete',
               methods=['GET', 'POST'])
 def deleteEmployer(employer_id):
     i = session.query(
@@ -26,7 +26,7 @@ def deleteEmployer(employer_id):
         session.delete(i)
         session.commit()
         flash("Employer deleted.")
-        return redirect(url_for('routes.home'))
+        return redirect(url_for('routes.viewEmployerAll'))
     else:
         return render_template('/employer/deleteEmployer.html', employer_id=employer_id,
                                employer=i)

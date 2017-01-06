@@ -8,15 +8,22 @@
 	Create new job
 </a>
 
+</br>
+
+<div class="">
+	<a href="{{url_for('routes.editEmployer', employer_id = employer.id)}}">
+	Edit Employer
+</a>
+</div>
+
 <a href="{{url_for('routes.deleteEmployer', employer_id = employer.id )}}">
 	Delete Employer
 </a>
 
-<div class="">
-	<a href="{{url_for('routes.editEmployer', employer_id = employer.id)}}">
-	Edit
-</a>
+</br>
+</br>
 
+<h2>Jobs</h2>
 
 {% for i in jobs %}
 
@@ -24,8 +31,8 @@
 
     <div class = 'nameAndPrice'>
 		
-		<span class = 'name'>
-			<p>{{i.name}}</p>
+		<span class = 'header'>
+			<h3>{{i.header}}</h3>
 		</span>
 
 		<span class = 'salary'>
@@ -56,6 +63,7 @@
 			Delete
 		</a>
 
+		</br>
 		</br>
 
 </div>

@@ -41,6 +41,15 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250))
 
+    @property
+    def serialize(self):
+        # returns object data in easy serializable format
+        # Description : variable
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
+
 
 class Job(Base):
     __tablename__ = 'job'
@@ -60,12 +69,14 @@ class Job(Base):
     def serialize(self):
         # returns object data in easy serializable format
         # Description : variable
+
         return {
             'header': self.header,
             'description': self.description,
             'id': self.id,
             'salary': self.salary,
-            'category': self.category,
+            # as category is in a different class must call name
+            'category': self.category.name,
         }
 
 

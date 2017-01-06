@@ -32,7 +32,7 @@ def newJob(employer_id):
 
         session.add(newItem)
         session.commit()
-        flash("Now we are cooking! Menu item created.")
+        flash("Hip hip hooray! Job created.")
 
         return redirect(url_for('routes.viewJob', job_id=newItem.id))
     else:
