@@ -9,7 +9,7 @@ session = sessionMaker.newSession()
 
 # return a single employer
 @routes.route("/employer/<int:employer_id>")
-def viewSingleEmployer(employer_id):
+def viewEmployer(employer_id):
     employer = session.query(
         Employer).filter_by(id=employer_id).one()
     jobs = session.query(Job).filter_by(
@@ -19,35 +19,35 @@ def viewSingleEmployer(employer_id):
 
     # TO DO  change to public once login complete
     if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('private-employer.html', employer=employer,
+        return render_template('/employer/viewEmployer-private.html', employer=employer,
                                jobs=jobs, employer_id=employer_id)
     else:
-        return render_template('private-employer.html', employer=employer,
+        return render_template('/employer/viewEmployer-private.html', employer=employer,
                                jobs=jobs, employer_id=employer_id)
 
 
 # return all employers
-@routes.route("/employers")
-def viewAllEmployers():
+@routes.route("/employer/all")
+def viewEmployerAll():
     employers = session.query(Employer).all()
 
     if 'username' not in login_session:
-        return render_template('all-employers.html', employers=employers)
+        return render_template('/employer/viewEmployerAll.html', employers=employers)
     else:
-        return render_template('all-employers.html', employers=employers)
+        return render_template('/employer/viewEmployerAll.html', employers=employers)
 
 
 # API endpoints
 # Return all employers in JSON format
-@routes.route("/employers/JSON")
-def allEmployersJSON():
+@routes.route("/employer/all/JSON")
+def viewEmployerAllJSON():
     employers = session.query(Employer).all()
     return jsonify(Employers=[i.serialize for i in employers])
 
 
 # Return a employer in JSON format
 @routes.route("/employer/<int:employer_id>/JSON")
-def showEmployerJSON(employer_id):
+def viewEmployerJSON(employer_id):
     jobs = session.query(Job).filter_by(
         employer_id=employer_id).all()
     return jsonify(Jobs=[i.serialize for i in jobs])
@@ -55,6 +55,6 @@ def showEmployerJSON(employer_id):
 
 # Return a job item in JSON format
 @routes.route("/employer/<int:employer_id>/jobs/<int:job_id>/JSON")
-def showEmployerJobJSON(employer_id, job_id):
+def viewEmployerJobJSON(employer_id, job_id):
     item = session.query(Job).filter_by(id=job_id).one()
     return jsonify(Job=[item.serialize])

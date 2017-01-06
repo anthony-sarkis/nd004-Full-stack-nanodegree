@@ -10,7 +10,7 @@ session = sessionMaker.newSession()
 """
 
 
-@routes.route('/categories/new',
+@routes.route('/category/new',
               methods=['GET', 'POST'])
 def newCategory():
     # How can I use a try/except block better here?
@@ -25,4 +25,4 @@ def newCategory():
 
         return redirect(url_for('routes.viewAllCategories'))
     else:
-        return render_template('newCategory.html')
+        return render_template('/category/newCategory.html')

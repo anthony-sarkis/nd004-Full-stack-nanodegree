@@ -5,7 +5,7 @@
 {% if not session['access_token'] %}
 	{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
-		    ('/employers', 'x', 'Employers'),
+		    ('/employer/all', 'x', 'Employers'),
 		    ('/login', 'login', 'Login'),
 			] -%}
 		{% set active_page = active_page|default('home') -%}

@@ -3,20 +3,26 @@ from helpers import sessionMaker
 from database_setup import Category, Job
 from methods import routes
 from flask import session as login_session
+from methods.job import viewJob
 
 session = sessionMaker.newSession()
 
 
 # return all categories
-@routes.route("/categories")
-def viewAllCategories():
+@routes.route("/category/all")
+def viewCategoryAll():
+
+    recent_jobs = viewJob.viewRecentJobs()
+
     # categories = session.query(Job.category).distinct().all()
     categories = session.query(Category).all()
     # Permissions
     if 'username' not in login_session:
-        return render_template('viewCategories-private.html', categories=categories)
+        return render_template('/category/viewCategoryAll.html',
+                               categories=categories, recent_jobs=recent_jobs)
     else:
-        return render_template('viewCategories-private.html', categories=categories)
+        return render_template('/category/viewCategoryAll.html',
+                               categories=categories, recent_jobs=recent_jobs)
 
 
 # return a category
@@ -30,6 +36,6 @@ def viewCategory(category_id):
 
     # Permissions
     if 'username' not in login_session:
-        return render_template('viewCategory-private.html', jobs=jobs, category=category)
+        return render_template('/category/viewCategory-private.html', jobs=jobs, category=category)
     else:
-        return render_template('viewCategory-private.html', jobs=jobs, category=category)
+        return render_template('/category/viewCategory-private.html', jobs=jobs, category=category)

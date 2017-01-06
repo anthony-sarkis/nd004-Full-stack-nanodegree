@@ -10,18 +10,17 @@ session = sessionMaker.newSession()
 """
 
 
-@routes.route('/categories/<int:category_id>/delete',
+@routes.route('/category/<int:category_id>/delete',
               methods=['GET', 'POST'])
 def deleteCategory(category_id):
-    # How can I use a try/except block better here?
-    CategoryToBeDeleted = session.query(
+    category = session.query(
         Category).filter_by(id=category_id).one()
 
     if request.method == 'POST':
-        session.delete(CategoryToBeDeleted)
+        session.delete(category)
         session.commit()
         flash("Category deleted")
         return redirect(url_for('routes.viewAllCategories'))
 
     else:
-        return render_template('deleteCategory.html', category=category_id)
+        return render_template('/category/deleteCategory.html', category=category)

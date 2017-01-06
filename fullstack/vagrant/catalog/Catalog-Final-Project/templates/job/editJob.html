@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set active_page = "TODO" %}
+{% block content %}
+
+<h1> Edit Job</h1>
+
+<form action="{{ url_for('routes.editJob',employer_id = employer_id, job_id=job.id)}}" method = 'post'>
+
+<dl>
+	<dt>Header:</dt>
+		<dd><input type ='text' name='header' value = '{{job.header }}'></dd>
+	<dt>Description:</dt>
+		<dd><textarea name = 'description' rows='5' cols='40' value = '{{job.description }}'></textarea></dd>
+	<dt>Salary:</dt>
+		<dd><input type = 'text' name='salary' value = '{{job.salary}}'></dd>
+	<dt>Category:</dt>
+	{% for i in categories %}
+		<dd><input type ='radio' name='category' value='{{i.id}}'>{{i.name}}</dd>
+	{% endfor %}
+
+</dl>
+
+
+<input type='submit' value='Edit'>
+
+</form>
+
+<a href = '{{url_for('routes.viewEmployer', employer_id = employer_id)}}'> Cancel </a>
+
+{% endblock %}

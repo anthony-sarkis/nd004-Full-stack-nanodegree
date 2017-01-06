@@ -17,17 +17,17 @@ On POST request: deletes a menu job and updates user.
 """
 
 
-@routes.route('/employer/<int:employer_id>/jobs/<int:job_id>/delete',
+@routes.route('/employer/<int:employer_id>/job/<int:job_id>/delete',
               methods=['GET', 'POST'])
 def deleteJob(employer_id, job_id):
     i = session.query(Job).filter_by(id=job_id).one()
     if request.method == 'POST':
         session.delete(i)
         session.commit()
-        flash("Job? What  job? Menu job deleted.")
-        return redirect(url_for('routes.showRestaurant', employer_id=employer_id))
+        flash("Job? What  job? Job deleted.")
+        return redirect(url_for('routes.viewEmployer', employer_id=employer_id))
     else:
-        return render_template('deletejob.html', job=i)
+        return render_template('/job/deletejob.html', job=i)
 
 
 # Potential future functions

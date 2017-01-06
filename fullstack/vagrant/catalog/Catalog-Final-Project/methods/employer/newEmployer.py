@@ -18,4 +18,4 @@ def newEmployer():
         return redirect(url_for('routes.showEmployer',
                                 employer_id=employer_id))
     else:
-        return render_template('newEmployer.html')
+        return render_template('/employer/newEmployer.html')

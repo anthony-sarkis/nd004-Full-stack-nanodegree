@@ -8,4 +8,4 @@ from helpers import antiforgery
 def login():
     state = antiforgery.secure()
     login_session['state'] = state
-    return render_template('login.html', STATE=state)
+    return render_template('/login/login.html', STATE=state)

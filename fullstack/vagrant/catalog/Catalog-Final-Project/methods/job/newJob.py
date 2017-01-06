@@ -36,4 +36,4 @@ def newJob(employer_id):
 
         return redirect(url_for('routes.viewJob', job_id=newItem.id))
     else:
-        return render_template('newjob.html', employer_id=employer_id, categories=categories)
+        return render_template('/job/newjob.html', employer_id=employer_id, categories=categories)

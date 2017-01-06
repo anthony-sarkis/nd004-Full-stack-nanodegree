@@ -47,7 +47,7 @@ class Job(Base):
 
     id = Column(Integer, primary_key=True)
     header = Column(String(80), nullable=False)
-    description = Column(String(80))
+    description = Column(String(250))
     salary = Column(String(8))
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)

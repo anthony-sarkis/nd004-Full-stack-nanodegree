@@ -17,10 +17,10 @@ def editEmployer(employer_id):
             session.add(i)
             session.commit()
         flash("Employer updated.")
-        return redirect(url_for('routes.viewSingleEmployer', employer_id=employer_id))
+        return redirect(url_for('routes.viewEmployer', employer_id=employer_id))
     else:
         return render_template(
-            'editemployer.html', employer_id=employer_id, employer=i)
+            '/employer/editemployer.html', employer_id=employer_id, employer=i)
 
 
 # Possible future functions

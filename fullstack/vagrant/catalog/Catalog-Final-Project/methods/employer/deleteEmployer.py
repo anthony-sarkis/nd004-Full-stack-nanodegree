@@ -28,8 +28,8 @@ def deleteEmployer(employer_id):
         flash("Employer deleted.")
         return redirect(url_for('routes.home'))
     else:
-        return render_template('deleterestaurant.html', employer_id=employer_id,
-                               restaurant=i)
+        return render_template('/employer/deleteEmployer.html', employer_id=employer_id,
+                               employer=i)
 
 
 # Potential future functions

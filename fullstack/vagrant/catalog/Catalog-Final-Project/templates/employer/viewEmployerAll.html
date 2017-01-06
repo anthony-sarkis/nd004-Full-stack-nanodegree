@@ -5,8 +5,8 @@
 <h1>All employers</h1>
 
 	<div class="">
-		<a href="{{url_for('routes.viewAllEmployers')}}">
-		New restaurant
+		<a href="{{url_for('routes.viewEmployerAll')}}">
+		New Employer
 	</a>
 
 {% for i in employers %}
@@ -15,24 +15,23 @@
 
     <div class = 'name'>
 		<p>{{i.name}}</p>
-		{{i.user_id}}
 	</div>
 
 	</div>
 
 	<div class="">
-		<a href="{{url_for('routes.viewSingleEmployer', employer_id = i.id)}}">
+		<a href="{{url_for('routes.viewEmployer', employer_id = i.id)}}">
 		View
 	</a>
 
 	<div class="">
-		<a href="{{url_for('routes.viewAllEmployers', employer_id = i.id)}}">
+		<a href="{{url_for('routes.editEmployer', employer_id = i.id)}}">
 		Edit
 	</a>
 
 	</br>
 
-	<a href="{{url_for('routes.viewAllEmployers', employer_id = i.id)}}">
+	<a href="{{url_for('routes.deleteEmployer', employer_id = i.id)}}">
 		Delete
 	</a>
 
