@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set actjobve_page = "TODO" %}
+{% block content %}
+
+{% for job in jobs %}
+
+	<h1>{{job.header}}</h1>
+
+	<div class = ''>
+		<span class = 'name'>
+		<p>{{job.header}}</p>
+		</span>
+
+		<span class = 'salary'>
+		<p>{{job.salary}} </p>
+		</span>
+
+		<span class = 'category'>
+		<p>{{job.employer.name}}</p>
+		</span>
+
+		<div class="description">
+		<p>{{job.description}}</p>
+		</div>
+	</div>
+
+{% endfor %}
+
+<h2> Recent Jobs </h2>
+
+{% for job in recent_jobs %}
+
+	<h1>{{job.header}}</h1>
+
+	<div class = ''>
+		<span class = 'name'>
+		<p>{{job.header}}</p>
+		</span>
+
+		<span class = 'salary'>
+		<p>{{job.salary}} </p>
+		</span>
+
+		<span class = 'category'>
+		<p>{{job.employer.name}}</p>
+		</span>
+
+		<div class="description">
+		<p>{{job.description}}</p>
+		</div>
+	</div>
+
+{% endfor %}
+
+
+{% endblock %}
