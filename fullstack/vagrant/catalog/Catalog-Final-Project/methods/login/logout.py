@@ -1,7 +1,7 @@
 from flask import session as login_session
 from flask import request, make_response, flash
-from methods import gdisconnect, facebook, routes
-
+from methods.login import gdisconnect, facebook
+from methods import routes
 
 @routes.route('/logout')
 def logout():
