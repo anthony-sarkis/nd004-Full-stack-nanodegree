@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, request, redirect
 from methods import routes
 from helpers import sessionMaker
 from database_setup import Job, Category
+from helpers import permissions
 
 session = sessionMaker.newSession()
 
@@ -20,20 +21,33 @@ def newJob(employer_id):
     categories = session.query(Category).all()
 
     if request.method == 'POST':
-        category = session.query(Category).filter_by(
-            name=request.form['category']).one()
+        if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+            category = session.query(Category).filter_by(
+                name=request.form['category']).one()
 
-        newItem = Job(
-            header=request.form['header'],
-            salary=request.form['salary'],
-            description=request.form['description'],
-            category_id=category.id,
-            employer_id=employer_id)
+            newItem = Job(
+                header=request.form['header'],
+                salary=request.form['salary'],
+                description=request.form['description'],
+                category_id=category.id,
+                employer_id=employer_id)
 
-        session.add(newItem)
-        session.commit()
-        flash("Hip hip hooray! Job created.")
+            session.add(newItem)
+            session.commit()
+            flash("Hip hip hooray! Job created.")
 
-        return redirect(url_for('routes.viewJob', job_id=newItem.id))
+            return redirect(url_for('routes.viewJob', job_id=newItem.id))
+        else:
+            flash("Please login.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
+
     else:
-        return render_template('/job/newjob.html', employer_id=employer_id, categories=categories)
+        if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+            return render_template(
+                '/job/newjob.html', employer_id=employer_id,
+                categories=categories)
+        else:
+            flash("Please login.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))

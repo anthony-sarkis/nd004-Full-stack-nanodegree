@@ -37,8 +37,8 @@ function signInCallback(authResult) {
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
-          window.location.href = "/gconnectTest";
-         }, 4000);
+          window.location.href = "/";
+         }, 500);
           
       	} else if (authResult['error']) {
     

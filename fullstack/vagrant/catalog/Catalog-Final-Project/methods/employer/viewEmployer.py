@@ -3,6 +3,7 @@ from helpers import sessionMaker
 from database_setup import Employer, Job, Category
 from methods import routes, userMethods
 from flask import session as login_session
+from helpers import permissions
 
 session = sessionMaker.newSession()
 
@@ -14,27 +15,26 @@ def viewEmployer(employer_id):
         Employer).filter_by(id=employer_id).one()
     jobs = session.query(Job).filter_by(
         employer_id=employer_id).all()
+
     # Permissions
-    creator = userMethods.getUserInfo(employer.user_id)
-
-    # TO DO  change to public once login complete
-    if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('/employer/viewEmployer-private.html', employer=employer,
-                               jobs=jobs, employer_id=employer_id)
+    if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+        return render_template('/employer/viewEmployer.html',
+                               employer=employer, jobs=jobs, employer_id=employer_id)
     else:
-        return render_template('/employer/viewEmployer-private.html', employer=employer,
-                               jobs=jobs, employer_id=employer_id)
-
+        return render_template('/employer/viewEmployerPublic.html',
+                               employer=employer, jobs=jobs, employer_id=employer_id)
 
 # return all employers
+
+
 @routes.route("/employer/all")
 def viewEmployerAll():
     employers = session.query(Employer).all()
 
-    if 'username' not in login_session:
+    if permissions.LoggedIn() == True:
         return render_template('/employer/viewEmployerAll.html', employers=employers)
     else:
-        return render_template('/employer/viewEmployerAll.html', employers=employers)
+        return render_template('/employer/viewEmployerAllPublic.html', employers=employers)
 
 
 # API endpoints

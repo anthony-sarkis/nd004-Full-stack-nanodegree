@@ -8,7 +8,9 @@
 
 <div>
     <div class = 'nameAndPrice'>
-		<span class = 'header'><p>{{i.header}}</p></span>
+		<span class = 'header'>
+			<a href="{{url_for('routes.viewJob', job_id=i.id)}}">{{i.header}}</a>
+		</span>
 		<span class = 'salary'>
 		<p>{{i.salary}} </p>
 	</span>

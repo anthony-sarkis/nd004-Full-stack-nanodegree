@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, request, redirect
 from methods import routes
 from helpers import sessionMaker
 from database_setup import Employer
+from helpers import permissions
 
 session = sessionMaker.newSession()
 
@@ -12,15 +13,28 @@ def editEmployer(employer_id):
     i = session.query(
         Employer).filter_by(id=employer_id).one()
     if request.method == 'POST':
-        if request.form['name']:
-            i.name = request.form['name']
-            session.add(i)
-            session.commit()
-        flash("Employer updated.")
-        return redirect(url_for('routes.viewEmployer', employer_id=employer_id))
+        if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+            if request.form['name']:
+                i.name = request.form['name']
+                session.add(i)
+                session.commit()
+            flash("Employer updated.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
+        else:
+            flash("Please login.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
+    # Get request
     else:
-        return render_template(
-            '/employer/editemployer.html', employer_id=employer_id, employer=i)
+        if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+            return render_template(
+                '/employer/editemployer.html', employer_id=employer_id,
+                employer=i)
+        else:
+            flash("Please login.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
 
 
 # Possible future functions

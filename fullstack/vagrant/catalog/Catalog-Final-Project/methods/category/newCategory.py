@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, request, redirect
 from methods import routes
-from helpers import sessionMaker
+from helpers import sessionMaker, permissions
 from database_setup import Category
 
 session = sessionMaker.newSession()
@@ -14,15 +14,18 @@ session = sessionMaker.newSession()
               methods=['GET', 'POST'])
 def newCategory():
     # How can I use a try/except block better here?
+    if permissions.LoggedIn() == True:
+        if request.method == 'POST':
+            newCategory = Category(name=request.form['name'])
 
-    if request.method == 'POST':
-        newCategory = Category(name=request.form['name'])
+            session.add(newCategory)
+            session.commit()
 
-        session.add(newCategory)
-        session.commit()
+            flash("Category created")
 
-        flash("Category created")
-
-        return redirect(url_for('routes.viewAllCategories'))
+            return redirect(url_for('routes.viewCategoryAll'))
+        else:
+            return render_template('/category/newCategory.html')
     else:
-        return render_template('/category/newCategory.html')
+        flash("Please login to create a category")
+        return redirect(url_for('routes.home'))

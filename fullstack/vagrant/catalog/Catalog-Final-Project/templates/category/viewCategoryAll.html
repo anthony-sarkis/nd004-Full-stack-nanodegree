@@ -6,11 +6,21 @@
 
 {% for i in categories %}
 
-<div class = ''>
-	<span class = 'category name'>
-		<a href="{{url_for('routes.viewCategory', category_id=i.id)}}">{{i.name}}</a>
-	</span>
-</div>
+	<div class = ''>
+		<span class = 'category name'>
+			<a href="{{url_for('routes.viewCategory', category_id=i.id)}}">
+			<h3>{{i.name}}</h3>
+			</a>
+		</span>
+	</div>
+
+	<div class = ''>
+		<span class = 'category delete'>
+			<a href="{{url_for('routes.deleteCategory', category_id=i.id)}}"> Delete</a>
+		</span>
+	</div>
+
+	</br>
 
 {% endfor %}
 

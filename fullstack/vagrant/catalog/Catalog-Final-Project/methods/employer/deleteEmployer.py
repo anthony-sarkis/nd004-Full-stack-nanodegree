@@ -1,11 +1,11 @@
 """
 Functions related to deleting employers
 """
-
 from flask import render_template, url_for, flash, request, redirect
 from methods import routes  # Blueprint routes from __init__.py
 from helpers import sessionMaker
 from database_setup import Employer
+from helpers import permissions
 
 session = sessionMaker.newSession()
 
@@ -23,13 +23,25 @@ def deleteEmployer(employer_id):
     i = session.query(
         Employer).filter_by(id=employer_id).one()
     if request.method == 'POST':
-        session.delete(i)
-        session.commit()
-        flash("Employer deleted.")
-        return redirect(url_for('routes.viewEmployerAll'))
+        if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+            if request.method == 'POST':
+                session.delete(i)
+                session.commit()
+                flash("Employer deleted.")
+                return redirect(url_for('routes.viewEmployerAll'))
+        else:
+            flash("Please login.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
+    # get request
     else:
-        return render_template('/employer/deleteEmployer.html', employer_id=employer_id,
-                               employer=i)
+        if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
+            return render_template('/employer/deleteEmployer.html',
+                                   employer_id=employer_id, employer=i)
+        else:
+            flash("Please login.")
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
 
 
 # Potential future functions

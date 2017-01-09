@@ -1,12 +1,12 @@
 
 Documentation for Restaurant Catalog Project
 -------------
-Release v0.1 on Decemeber 2016
+Release v0.1 on January 2016
 
 
 Files:
 ------------------------------------------------------------------------
-Main entry --> /restaurant-main.py
+Main entry --> /main-catalog.py
 
 Methods --> /methods
 
@@ -21,9 +21,10 @@ CSS -> /static
 
 Description:
 ------------------------------------------------------------------------
-The program generates restaruant menu app using Flask
+The program generates employment catalog app using Flask
 
-The primary function is a demenstration of create, read, update, and delete (CRUD) operations for a given restraunt and menu
+The primary function is a demenstration of create, read, update, and delete (CRUD) operations for a given employer, category,
+and job.
 
 
 
@@ -31,15 +32,15 @@ Getting started:
 ------------------------------------------------------------------------
 
 
-** Project requires a client_secrets.json file in the /catalog directory.
 
 To run locally:
 
 Please note this runs in the Vagrant environment, included in /vagrant
 
-1) from the console, cd to /vagrant directory
+1) ** Important  **
+Place your client_secrets.json file for both google and facebook logins in the /catalog directory.
 
-2) type "vagrant up" and hit enter   #This starts the virtual machine
+2) from the console, cd to /vagrant directory, then type "vagrant up" and hit enter   #This starts the virtual machine
 
 3) type "vagrant ssh" and hit enter   #Log in to machine
 
@@ -49,9 +50,9 @@ Please note this runs in the Vagrant environment, included in /vagrant
 
 6) run database_setup.py to create the database
 
-7) run lotsofmenus.py to populate the database
+7) run data-populator.py to populate the database
 
-8) run restraunt-main.py to start server
+8) run main-catalog.py to start server
 
 9) navigate to localhost:5000 in your browser
 

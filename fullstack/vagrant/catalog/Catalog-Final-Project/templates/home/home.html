@@ -4,17 +4,6 @@
 
 <h1> Work </h1>
 
-	<a href="/jobs"> View all jobs </a>
-	</br>
-	<a href="/category/all"> View all categories </a>
-	</br>
-	<a href="/employer/all"> View all employers </a>
-	</br>
-	<a href="/employer/new"> Create a new employer </a>
-
-</br>
-</br>
-
 <h2> API's available: </h2>
 	<ul>
 		<li>
@@ -29,6 +18,12 @@
 			<a href="/employer/9/job/48/JSON"> Return a job in JSON format </a>
 		</li>
 	</ul>
+<br>
+
+<h2> Recent Jobs: </h2>
+{% include "job/viewRecentjobs.html" %}
+
+
 
 
 {% endblock %}

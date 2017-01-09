@@ -4,13 +4,11 @@
 
 {% for job in jobs %}
 
-	<h1>{{job.header}}</h1>
+	<a href="{{url_for('routes.viewJob', job_id=job.id)}}">
+	<h3>{{job.header}}</h3>
+	</a>
 
 	<div class = ''>
-		<span class = 'header'>
-		<p>{{job.header}}</p>
-		</span>
-
 		<span class = 'salary'>
 		<p>{{job.salary}} </p>
 		</span>
@@ -26,31 +24,7 @@
 
 {% endfor %}
 
-<h2> Recent Jobs </h2>
-
-{% for job in recent_jobs %}
-
-	<h1>{{job.header}}</h1>
-
-	<div class = ''>
-		<span class = 'name'>
-		<p>{{job.header}}</p>
-		</span>
-
-		<span class = 'salary'>
-		<p>{{job.salary}} </p>
-		</span>
-
-		<span class = 'category'>
-		<p>{{job.employer.name}}</p>
-		</span>
-
-		<div class="description">
-		<p>{{job.description}}</p>
-		</div>
-	</div>
-
-{% endfor %}
-
+<h2> Recent Jobs: </h2>
+{% include "job/viewRecentjobs.html" %}
 
 {% endblock %}

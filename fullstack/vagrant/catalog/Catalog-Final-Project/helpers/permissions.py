@@ -1,13 +1,25 @@
-
-from flask import render_template
+from database_setup import Employer
 from flask import session as login_session
+from methods import userMethods
+from helpers import sessionMaker
+
+session = sessionMaker.newSession()
+
+# True means has permission, False means doesn't.
 
 
-def userLoggedIn():
- 	#TO DO better handling for this, ie check if user logged in, if not do x etc.
- 	#if 'username' not in login_session:
- 	pass
+def EmployerAdminAndLoggedIn(employer_id):
+    employer = session.query(
+        Employer).filter_by(id=employer_id).one()
+    creator = userMethods.getUserInfo(employer.user_id)
+    if 'username' in login_session and creator.id == login_session['user_id']:
+        return True
+    else:
+        return False
 
-def userCreated():
-	pass
-	#TODO
+
+def LoggedIn():
+    if 'username' in login_session:
+        return True
+    else:
+        return False

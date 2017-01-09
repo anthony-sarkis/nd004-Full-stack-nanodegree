@@ -11,23 +11,9 @@
     <div class = 'name'>
 
 	<a href="{{url_for('routes.viewEmployer', employer_id = i.id)}}">
-		<h3>{{i.name}}</h3>
+		{{i.name}}
 	</a>
 	</div>
-
-	<div class="">
-		<a href="{{url_for('routes.editEmployer', employer_id = i.id)}}">
-		Edit
-	</a>
-
-	</br>
-
-	<a href="{{url_for('routes.deleteEmployer', employer_id = i.id)}}">
-		Delete
-	</a>
-
-	</br>
-	</br>
 
 </div>
 

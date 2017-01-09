@@ -1,23 +1,21 @@
 from flask import session as login_session
-from flask import request, make_response, flash
+from flask import request, make_response, flash, redirect, url_for
 from methods.login import gdisconnect, facebook
 from methods import routes
 
+
 @routes.route('/logout')
 def logout():
-    # add method to handle if no login provider #buggy
-    output = ""
-
     if login_session['provider_google'] == 'google':
         gdisconnect.gdisconnect()
-        # Add a if statement?
-        output += "Successfully logged out google."
+        # This is an optimistic statement
+        # TODO Add a success condition check?
+        flash("Successfully logged out google.")
 
-    elif login_session['provider_facebook'] == 'facebook':
+    elif login_session['provider'] == 'facebook':
         facebook.fbdisconnect()
-        output += "Successfully logged out facebook."
+        flash("Successfully logged out facebook.")
     else:
-        output += "Nothing to logout"
+        flash("Nothing to logout")
 
-    # Redirect to home / handle better
-    return output
+    return redirect(url_for('routes.home'))

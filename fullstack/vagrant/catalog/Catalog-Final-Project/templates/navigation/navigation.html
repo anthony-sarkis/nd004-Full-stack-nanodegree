@@ -5,7 +5,9 @@
 {% if not session['access_token'] %}
 	{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
+		    ('/job/all', 'x', 'Jobs'),
 		    ('/employer/all', 'x', 'Employers'),
+		    ('/category/all', 'x', 'Categories'),
 		    ('/login', 'login', 'Login'),
 			] -%}
 		{% set active_page = active_page|default('home') -%}
@@ -14,7 +16,11 @@
 {% else %}
 		{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
+		    ('/job/all', 'x', 'Jobs'),
+		    ('/employer/all', 'x', 'Employers'),
+		    ('/category/all', 'x', 'Categories'),
 		    ('/employer/new', 'x', 'New employer'),
+		    ('/category/new', 'x', 'New category'),
 		    ('/logout', 'logout', 'Logout'),
 			] -%}
 		{% set active_page = active_page|default('home') -%}

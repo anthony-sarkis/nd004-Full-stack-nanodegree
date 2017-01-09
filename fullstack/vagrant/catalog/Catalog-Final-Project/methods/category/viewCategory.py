@@ -1,5 +1,5 @@
 from flask import render_template, jsonify, url_for, flash
-from helpers import sessionMaker
+from helpers import sessionMaker, permissions
 from database_setup import Category, Job
 from methods import routes
 from flask import session as login_session
@@ -17,11 +17,11 @@ def viewCategoryAll():
     # categories = session.query(Job.category).distinct().all()
     categories = session.query(Category).all()
     # Permissions
-    if 'username' not in login_session:
+    if permissions.LoggedIn() == True:
         return render_template('/category/viewCategoryAll.html',
                                categories=categories, recent_jobs=recent_jobs)
     else:
-        return render_template('/category/viewCategoryAll.html',
+        return render_template('/category/viewCategoryAllPublic.html',
                                categories=categories, recent_jobs=recent_jobs)
 
 
@@ -31,11 +31,7 @@ def viewCategory(category_id):
 
     # example of one to many
     category = session.query(Category).filter_by(id=category_id).one()
-
     jobs = session.query(Job).filter_by(category_id=category_id).all()
 
     # Permissions
-    if 'username' not in login_session:
-        return render_template('/category/viewCategory-private.html', jobs=jobs, category=category)
-    else:
-        return render_template('/category/viewCategory-private.html', jobs=jobs, category=category)
+    return render_template('/category/viewCategory.html', jobs=jobs, category=category)

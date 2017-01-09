@@ -3,6 +3,7 @@ from methods import routes
 from helpers import sessionMaker
 from database_setup import Employer
 from flask import session as login_session
+from helpers import permissions
 
 session = sessionMaker.newSession()
 
@@ -10,20 +11,22 @@ session = sessionMaker.newSession()
 @routes.route('/employer/new', methods=['GET', 'POST'])
 def newEmployer():
     if request.method == 'POST':
-
-        # TO DO review permissions
-
-        # user must be logged in to acccess page in general and user_id
-
-        ######
-
-        newEmployer = Employer(name=request.form['name'],
-                               user_id=login_session['user_id'])
-        session.add(newEmployer)
-        session.commit()
-        flash("Welcome! Employer created.")
-        employer_id = newEmployer.id
-        return redirect(url_for('routes.viewEmployer',
-                                employer_id=employer_id))
+        if permissions.LoggedIn() == True:
+            newEmployer = Employer(name=request.form['name'],
+                                   user_id=login_session['user_id'])
+            session.add(newEmployer)
+            session.commit()
+            flash("Welcome! Employer created.")
+            employer_id = newEmployer.id
+            return redirect(url_for('routes.viewEmployer',
+                                    employer_id=employer_id))
+        else:
+            flash("Please login to create an employer")
+            return redirect(url_for('routes.newEmployer'))
+    # GET request
     else:
-        return render_template('/employer/newEmployer.html')
+        if permissions.LoggedIn() == True:
+            return render_template('/employer/newEmployer.html')
+        else:
+            flash("Please login to create an employer")
+            return redirect(url_for('routes.viewEmployerAll'))
