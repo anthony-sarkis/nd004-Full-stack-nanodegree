@@ -2,29 +2,30 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-<h1>All categories</h1>
+<h1 class="gallery-title">All categories</h1>
 
-{% for i in categories %}
+<div class="gallery">
+	{% for i in categories %}
 
-	<div class = ''>
-		<span class = 'category name'>
-			<a href="{{url_for('routes.viewCategory', category_id=i.id)}}">
-			<h3>{{i.name}}</h3>
-			</a>
-		</span>
-	</div>
+		<div class = 'gallery-item'>
+			<span class = 'category name'>
+				<a href="{{url_for('routes.viewCategory', category_id=i.id)}}">
+				<h3>{{i.name}}</h3>
+				</a>
+			</span>
 
-	<div class = ''>
-		<span class = 'category delete'>
-			<a href="{{url_for('routes.deleteCategory', category_id=i.id)}}"> Delete</a>
-		</span>
-	</div>
+		<div class = ''>
+			<span class = 'category delete'>
+				<a href="{{url_for('routes.deleteCategory', category_id=i.id)}}"> Delete</a>
+			</span>
+		</div>
 
-	</br>
+		</div>
 
-{% endfor %}
+	{% endfor %}
+</div>
 
-<h2> Recent Jobs </h2>
+<h2 class="gallery-title"> Recent Jobs </h2>
 {% include "job/viewRecentjobs.html" %}
 
 {% endblock %}

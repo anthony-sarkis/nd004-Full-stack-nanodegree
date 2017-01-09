@@ -2,34 +2,22 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-<h1>{{category.name}}</h1>
+<h1 class="gallery-title">{{category.name}}</h1>
 
-{% for i in jobs %}
+<div class="gallery">
+	{% for i in jobs %}
+		<div class="gallery-item">
+			
+			<h3>
+				<a href="{{url_for('routes.viewJob', job_id=i.id)}}">{{i.header}}</a>
+			</h3>
 
-<div>
-
-<div class = ''>
-	<span class = 'name'>
-		<a href="{{url_for('routes.viewJob', job_id=i.id)}}">{{i.header}}</a>
-	</span>
-
-	<span class = 'salary'>
-		<p>{{i.salary}} </p>
-	</span>
-
-	<span class = 'category'>
-		<p>{{i.employer.name}}</p>
-	</span>
-
-	<div class="description">
-		<p>{{i.description}}</p>
-	</div>
-
-	<br/> <br/>
+			<p>{{i.salary}} </p>
+			<p>{{i.employer.name}}</p>
+			<p>{{i.description}}</p>
+		</div>
+	{% endfor %}
 </div>
-
-
-{% endfor %}
 
 
 {% endblock %}

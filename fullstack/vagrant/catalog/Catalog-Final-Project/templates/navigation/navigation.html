@@ -1,6 +1,6 @@
 
 <!-- Public nav -->
-<div class="navigation">
+<div class="header">
 
 {% if not session['access_token'] %}
 	{% set navigation_bar = [
@@ -26,12 +26,11 @@
 		{% set active_page = active_page|default('home') -%}
 {% endif %}
 
-	<div class="">
-		<nav class="navbar navbar-default">
-			<ul id="navigation" class="nav navbar-nav">
+	<div class="title">
+			<ul id="navigation" class="">
 				{% for href, id, caption in navigation_bar %}
 					  <li 	{% if id == active_page %} class="active"{% endif %}>
-					  	<a href="{{ href|e }}" class="main-title">{{ caption|e }}</a>
+					  	<a href="{{ href|e }}" class="nav-element">{{ caption|e }}</a>
 					  </li>
 				{% endfor %}
 			</ul>
