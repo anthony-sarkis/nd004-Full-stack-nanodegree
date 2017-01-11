@@ -4,25 +4,22 @@
 
 <h1>{{employer.name}}</h1>
 
-{% for i in jobs %}
-
-<div>
-    <div class = 'nameAndPrice'>
-		<span class = 'header'>
-			<a href="{{url_for('routes.viewJob', job_id=i.id)}}">{{i.header}}</a>
-		</span>
-		<span class = 'salary'>
+	<div class="gallery">
+	{% for i in jobs %}
+	<div class="gallery-item">
+			
+		<a href="{{url_for('routes.viewJob', job_id=i.id)}}">
+			<h2>{{i.header}}</h2>
+		</a>
 		<p>{{i.salary}} </p>
-	</span>
-	</div>
-
-	<div class="description">
 		<p>{{i.description}}</p>
-	</div>
-	</div>
 
-</div>
+		<a href="{{ url_for('routes.viewCategory', category_id=i.category.id)}}"> 
+		<p>{{i.category.name}}</p>
+		</a>
 
-{% endfor %}
+	</div>
+	{% endfor %}
+	</div>
 
 {% endblock %}

@@ -9,11 +9,18 @@
 		<div class="gallery-item">
 			
 			<h3>
-				<a href="{{url_for('routes.viewJob', job_id=i.id)}}">{{i.header}}</a>
+				<a href="{{url_for('routes.viewJob', job_id=i.id)}}">
+					{{i.header}}
+				</a>
 			</h3>
 
 			<p>{{i.salary}} </p>
-			<p>{{i.employer.name}}</p>
+
+			<a href="{{url_for('routes.viewEmployer', employer_id=i.employer.id)}}">
+				<p>
+					{{i.employer.name}}
+				</p>
+			</a>
 			<p>{{i.description}}</p>
 		</div>
 	{% endfor %}

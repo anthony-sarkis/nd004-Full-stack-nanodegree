@@ -18,8 +18,8 @@ def editEmployer(employer_id):
                 i.name = request.form['name']
                 session.add(i)
                 session.commit()
-            flash("Employer updated.")
-            return redirect(url_for('routes.viewEmployer',
+                flash("Employer updated.")
+                return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
         else:
             flash("Please login.")
@@ -29,7 +29,7 @@ def editEmployer(employer_id):
     else:
         if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
             return render_template(
-                '/employer/editemployer.html', employer_id=employer_id,
+                '/employer/editEmployer.html', employer_id=employer_id,
                 employer=i)
         else:
             flash("Please login.")

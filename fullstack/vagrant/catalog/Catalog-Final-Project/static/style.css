@@ -9,7 +9,7 @@ a {
 }
 
 a:hover {
-	color: blue;
+	color: #1c9bc9;
 	text-decoration: underline;
 }
 
@@ -30,4 +30,9 @@ a:hover {
     list-style-type: none;
     text-align: center;
 
+}
+
+.signInButton {
+	padding: 30px;
+	text-align: center;
 }

@@ -5,7 +5,7 @@
 
 
 <!-- GOOGLE PLUS SIGN IN BUTTON-->   
-<div id="signInButton">
+<div class="signInButton">
   <span class="g-signin"
     data-scope="openid email"
     data-clientid="126122693012-qlarop2bsvj9c4dmg1cuibkh8v3mmmi5.apps.googleusercontent.com"
@@ -62,7 +62,7 @@ function signInCallback(authResult) {
     cookie     : true,  // enable cookies to allow the server to access 
                         // the session
     xfbml      : true,  // parse social plugins on this page
-    version    : 'v2.8' // use version 2.2
+    version    : 'v2.8'
   });
   };
   // Load the SDK asynchronously
@@ -93,7 +93,7 @@ function signInCallback(authResult) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
           window.location.href = "/";
-         }, 4000);
+         }, 1000);
           
       } else {
         $('#result').html('Failed to make a server-side call. Check your configuration and console.');
@@ -109,7 +109,7 @@ function signInCallback(authResult) {
 <button>
          
 
-          <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+          <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();" class="signInButton">
 <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
 
 </fb:login-button>

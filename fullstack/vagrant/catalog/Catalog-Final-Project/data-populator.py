@@ -5,7 +5,7 @@ session = sessionMaker.newSession()
 
 
 # Create dummy user
-User1 = User(name="Robo Barista", email="tinnyTim@udacity.com",
+User1 = User(name="Anthony Sarkis", email="anthonysarkis@gmail.com",
              picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')
 session.add(User1)
 session.commit()
@@ -23,82 +23,20 @@ session.add(category4)
 session.commit()
 
 
-# Menu for UrbanBurger
-employer1 = Employer(user_id=1, name="Hooli")
-
-session.add(employer1)
-session.commit()
-
-job2 = Job(user_id=1, header="Veggie Burger", description="Juicy grilled veggie patty with tomato mayo and lettuce",
-           salary="$7.50", category_id=1, employer=employer1)
-
-session.add(job2)
-session.commit()
-
-
-job1 = Job(user_id=1, header="French Fries", description="with garlic and parmesan",
-           salary="$2.99", category_id=1, employer=employer1)
-
-session.add(job1)
-session.commit()
-
-job2 = Job(user_id=1, header="Chicken Burger", description="Juicy grilled chicken patty with tomato mayo and lettuce",
-           salary="$5.50", category_id=2, employer=employer1)
-
-session.add(job2)
-session.commit()
-
-job3 = Job(user_id=1, header="Chocolate Cake", description="fresh baked and served with ice cream",
-           salary="$3.99", category_id=3, employer=employer1)
-
-session.add(job3)
-session.commit()
-
-job4 = Job(user_id=1, header="Sirloin Burger", description="Made with grade A beef",
-           salary="$7.99", category_id=2, employer=employer1)
-
-session.add(job4)
-session.commit()
-
-job5 = Job(user_id=1, header="Root Beer", description="16oz of refreshing goodness",
-           salary="$1.99", category_id=4, employer=employer1)
-
-session.add(job5)
-session.commit()
-
-job6 = Job(user_id=1, header="Iced Tea", description="with Lemon",
-           salary="$.99", category_id=4, employer=employer1)
-
-session.add(job6)
-session.commit()
-
-job7 = Job(user_id=1, header="Grilled Cheese Sandwich",
-           description="On texas toast with American Cheese", salary="$3.49", category_id=2, employer=employer1)
-
-session.add(job7)
-session.commit()
-
-job8 = Job(user_id=1, header="Veggie Burger", description="Made with freshest of ingredients and home grown spices",
-           salary="$5.99", category_id=2, employer=employer1)
-
-session.add(job8)
-session.commit()
-
-
 # Menu for Super Stir Fry
-employer2 = Employer(user_id=1, name="Super Stir Fry")
+employer2 = Employer(user_id=1, name="Buber")
 
 session.add(employer2)
 session.commit()
 
 
-job1 = Job(user_id=1, header="Chicken Stir Fry", description="With your choice of noodles vegetables and sauces",
-           salary="$7.99", category_id=2, employer=employer2)
+job1 = Job(user_id=1, header="Driver", description="Drive our cars",
+           salary="Peanuts", category_id=2, employer=employer2)
 
 session.add(job1)
 session.commit()
 
-job2 = Job(user_id=1, header="Peking Duck",
+job2 = Job(user_id=1, header="Lots of ducks",
            description=" A famous duck dish from Beijing[1] that has been prepared since the imperial era. The meat is prized for its thin, crisp skin, with authentic versions of the dish serving mostly the skin and little meat, sliced in front of the diners by the cook", salary="$25", category_id=2, employer=employer2)
 
 session.add(job2)
@@ -378,6 +316,62 @@ job1 = Job(user_id=1, header="Lemon Curd Ice Cream Sandwich",
            description="Lemon Curd Ice Cream Sandwich on a chocolate macaron with cardamom meringue and cashews", salary="$4.25", category_id=3, employer=employer1)
 
 session.add(job1)
+session.commit()
+
+
+# Menu for Hooli
+employer1 = Employer(user_id=1, name="Hooli")
+
+session.add(employer1)
+session.commit()
+
+job2 = Job(user_id=1, header="Python Developer", description="We are seeking skilled Java Developers to join our Winnipeg team. You will engage with numerous different clients and amazing development teams to design, estimate, code, and test complex programs.",
+           salary="$20,000", category_id=1, employer=employer1)
+
+session.add(job2)
+session.commit()
+
+
+job1 = Job(user_id=1, header="JavaScript Developer", description="Work closely with fellow Software Engineers and members of other disciplines on the project team. HB Studios is the largest video game developer in Atlantic...",
+           salary="$10,000", category_id=1, employer=employer1)
+
+session.add(job1)
+session.commit()
+
+job2 = Job(user_id=1, header="C++ Developer", description="Software Development Company. AGILE software development methodology Must Have Primary Skills :. AGILE software development methodology Nice To Have Secondary..",
+           salary="$10/hour", category_id=1, employer=employer1)
+
+session.add(job2)
+session.commit()
+
+job3 = Job(user_id=1, header=".Net Developer", description="Complete development-related tasks as assigned by tech leads and/or senior developers. Software development - .NET 4.0 and prior versions / C# / SQL Server and..",
+           salary="TBD", category_id=1, employer=employer1)
+
+session.add(job3)
+session.commit()
+
+job4 = Job(user_id=1, header="C# Developer", description="These tasks are applicable to new systems development, system enhancement and external software packages. Tracks and monitors the performance of current and/or...",
+           salary="TBD", category_id=1, employer=employer1)
+
+session.add(job4)
+session.commit()
+
+job5 = Job(user_id=1, header="Ruby Developer", description="Test driven development and the use of version control software should be familiar to the candidate. Our Regina, SK based client is looking for full time Java...",
+           salary="TBD", category_id=1, employer=employer1)
+
+session.add(job5)
+session.commit()
+
+job6 = Job(user_id=1, header="Product Manager", description="Engineered Code is looking for an experienced software developer who can manage a team building websites and software applications..",
+           salary="$30,000", category_id=4, employer=employer1)
+
+session.add(job6)
+session.commit()
+
+job7 = Job(user_id=1, header="Product Director",
+           description="Engineered Code is looking for an experienced software developer who can manage a team building websites and software applications..", salary="$100,000", category_id=2, employer=employer1)
+
+session.add(job7)
 session.commit()
 
 

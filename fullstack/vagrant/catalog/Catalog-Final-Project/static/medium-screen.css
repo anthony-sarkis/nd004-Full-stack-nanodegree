@@ -13,7 +13,7 @@
 	.title {
 		width: 80%;
 		font-size: 1.2em;
-		text-align: right;
+		text-align: left;
 	}
 	.title h1, h3 {
 		margin: 0;
@@ -48,5 +48,21 @@
 }
 /* Gallery section */
 
+.job-item {
+	width: 33%;
+	padding: 15px;
+}
 
+
+.navigation {
+    justify-content: space-around;
+    /* change to horizontal menu */
+    -webkit-flex-flow: row wrap;
+}
+
+.navigation a {
+  display: block;
+}
+
+/* end media query */
 }

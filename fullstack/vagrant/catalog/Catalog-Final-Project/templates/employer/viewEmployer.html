@@ -2,73 +2,46 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-<h1>{{employer.name}}</h1>
+<h1 class="title">{{employer.name}}</h1>
 
-<a href="{{url_for('routes.newJob', employer_id = employer.id, job_id = jobs.id )}}">
-	Create new job
-</a>
+<div class="gallery">
+	<div class="buttonHolder">		
+		<a class="newItemButton" href="{{url_for('routes.newJob', employer_id = employer.id, job_id = jobs.id )}}">
+			Create new job</a>
 
-</br>
+		<a class="editItemButton" href="{{url_for('routes.editEmployer', employer_id = employer.id)}}">
+			Edit Employer</a>
 
-<div class="">
-	<a href="{{url_for('routes.editEmployer', employer_id = employer.id)}}">
-	Edit Employer
-</a>
+		<a class="cancelItemButton" href="{{url_for('routes.deleteEmployer', employer_id = employer.id )}}">
+			Delete Employer</a>
+	</div>
 </div>
-
-<a href="{{url_for('routes.deleteEmployer', employer_id = employer.id )}}">
-	Delete Employer
-</a>
-
-</br>
-</br>
 
 <h2>Jobs</h2>
 
+<div class="gallery">
 {% for i in jobs %}
+	<div class = 'gallery-item'>
 
-<div>
-
-    <div class = 'nameAndPrice'>
-		
-		<span class = 'header'>
-			<h3>{{i.header}}</h3>
-		</span>
-
-		<span class = 'salary'>
-			<p>{{i.salary}} </p>
-		</span>
-
-		<span class = 'category'>
-			<p>{{i.category.name}}</p>
-		</span>
-
-	</div>
-
-	<div class="description">
+		<h3>{{i.header}}</h3>
+		<p>{{i.salary}} </p>
+		<p>{{i.category.name}}</p>
 		<p>{{i.description}}</p>
-	</div>
-
-
-	</div>
-
+		
 		<div class="editdeletepane">
 			<a href="{{url_for('routes.editJob', employer_id = employer.id, job_id = i.id)}}">
-			Edit
-		</a>
+				Edit
+			</a>
+		</div>
 
-		</br>
+		<div>
+			<a href="{{url_for('routes.deleteJob', employer_id = employer.id, job_id = i.id )}}">
+				Delete
+			</a>
+		</div>
 
-		<a href="{{url_for('routes.deleteJob', employer_id = employer.id, job_id = i.id )}}">
-			Delete
-		</a>
-
-		</br>
-		</br>
-
-</div>
-
+	</div>
 {% endfor %}
-
+</div>
 
 {% endblock %}

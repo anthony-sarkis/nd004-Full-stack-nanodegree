@@ -2,31 +2,28 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-<h1> New Job Item </h1>
+<h3 class="title"> New Job </h3>
 
-<form action="{{ url_for('routes.newJob',employer_id = employer_id )}}" method = 'post'>
+<form class="job-item" action="{{ url_for('routes.newJob',employer_id = employer_id )}}" method = 'post'>
 
-<dl>
-	<dt>header:</dt>
-		<dd><input type ='text' name='header' placeholder="header"></dd>
-	<dt>Description:</dt>
-		<dd><textarea name = 'description' rows='5' cols='40' placeholder="description"></textarea></dd>
-	<dt>Salary:</dt>
-		<dd><input type = 'text' name='salary' placeholder="salary"></dd>
-	<dt>Category:</dt>
-	{% for i in categories %}
-		<dd><input type ='radio' name='category' value='{{i.name}}'>{{i.name}}</dd>
-	{% endfor %}
-
-</dl>
+		<input type ='text' name='header' placeholder="Header">
+		<textarea name = 'description' rows='5' placeholder="Description"></textarea></dd>
+		<input type = 'text' name='salary' placeholder="Salary">
+		
+		<div class="categories-list">
+			{% for i in categories %}
+				<div>
+					<input type ='radio' name='category' value='{{i.name}}'>{{i.name}}
+				</div>
+			{% endfor %}
+		</div>
 
 
-<input type='submit' value='Create'>
+	<input type='submit' value='Create' class="newItemButton">
+
+	<a href = '{{url_for('routes.viewEmployerAll')}}' class="cancelItemButton"> Cancel </a>
 
 </form>
-
-<a href = '{{url_for('routes.viewEmployerAll')}}'> Cancel </a>
-
 
 
 {% endblock %}

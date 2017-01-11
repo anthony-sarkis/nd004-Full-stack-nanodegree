@@ -1,21 +1,23 @@
 {% extends "base.html" %}
-{% set active_page = "TODO" %}
+{% set active_page = "newCategory" %}
 {% block content %}
 
-<h1> New Category </h1>
+<h1 class="title"> New Category </h1>
 
-<form action="{{ url_for('routes.newCategory')}}" method = 'post'>
+<form class="newItemForm" action="{{ url_for('routes.newCategory')}}" method = 'post'>
 
-	<dl>
-		<dt>Category:</dt>
-			<dd><input type ='text' name='name' placeholder="name"></dd>
-	</dl>
+	<input class="newItemInput" type ='text' name='name' placeholder="Category Name">
 
-	<input type='submit' value='Create'>
+	<div class="buttonHolder">
+
+		<input class="newItemButton" type='submit' value='Create'> 
+
+		<a href = '{{url_for('routes.viewCategoryAll')}}' class="cancelItemButton">
+		Cancel
+		</a>
+	</div>
+
 </form>
-
-<a href = '{{url_for('routes.viewCategoryAll')}}'> Cancel </a>
-
 
 
 {% endblock %}

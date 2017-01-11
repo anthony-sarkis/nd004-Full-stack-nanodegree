@@ -2,35 +2,33 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-<h1> Edit Job</h1>
+<h3 class="title"> Edit Job</h3>
 
-<form action="{{ url_for('routes.editJob',employer_id = employer_id, job_id=job.id)}}" method = 'post'>
+<form class="job-item" action="{{ url_for('routes.editJob',employer_id = employer_id, job_id=job.id)}}" method = 'post'>
 
-<dl>
-	<dt>Header:</dt>
-		<dd><input type ='text' name='header' value = '{{job.header}}'></dd>
-	<dt>Description:</dt>
-		<dd><input type ='text' name = 'description' rows='5' cols='40' value = '{{job.description}}'></dd>
-	<dt>Salary:</dt>
-		<dd><input type = 'text' name='salary' value = '{{job.salary}}'></dd>
-	<dt>Category:</dt>
+<input type ='text' name='header' value = '{{job.header}}' placeholder="Header">
+<input type ='text' name = 'description' rows='5' value = '{{job.description}}' placeholder="Description">
+<input type = 'text' name='salary' value = '{{job.salary}}' placeholder="Salary">
+
+	<div class="categories-list">
 	{% for category in categories %}
-		
 		{% if category.name == job.category.name %}
-			<dd><input type ='radio' name='category' value='{{category.id}}' checked="checked" >{{category.name}}</dd>
+			<div>
+				<input type ='radio' name='category' value='{{category.id}}' checked="checked" >{{category.name}}
+			</div>
 		{% else %}
-			<dd><input type ='radio' name='category' value='{{category.id}}'>{{category.name}}</dd>
+			<div>
+				<input type ='radio' name='category' value='{{category.id}}'>{{category.name}}
+			</div>
 		{% endif %}
-
 	{% endfor %}
+	</div>
 
-</dl>
+<input type='submit' value='Edit' class="editItemButton">
 
-
-<input type='submit' value='Edit'>
+<a href = '{{url_for('routes.viewEmployer', employer_id = employer_id)}}' class="cancelItemButton"> Cancel </a>
 
 </form>
 
-<a href = '{{url_for('routes.viewEmployer', employer_id = employer_id)}}'> Cancel </a>
 
 {% endblock %}

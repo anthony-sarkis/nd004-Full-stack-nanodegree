@@ -2,17 +2,12 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-
-	<h1> Edit Employer </h1>
+	<h3 class="title"> Edit Employer </h3>
 
 	<form action="{{url_for('routes.editEmployer', employer_id=employer_id )}}" method = 'POST'>
+		<input type='text' size='30' name='name' value="{{employer.name}}">
 
-	<p>Name:</p>
-
-	<input type='text' size='30' name='name' value="{{employer.name}}">
-
-	<input type='submit' value='Edit'>
-
+		<input type='submit' value='Edit' class="editItemButton">
 	</form>
 
 {% endblock %}

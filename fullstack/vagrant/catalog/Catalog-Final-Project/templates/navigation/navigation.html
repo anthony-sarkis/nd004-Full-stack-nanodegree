@@ -1,13 +1,12 @@
 
 <!-- Public nav -->
-<div class="header">
-
 {% if not session['access_token'] %}
 	{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
-		    ('/job/all', 'x', 'Jobs'),
-		    ('/employer/all', 'x', 'Employers'),
-		    ('/category/all', 'x', 'Categories'),
+		    ('/job/all', 'Jobs', 'Jobs'),
+		    ('/employer/all', 'employers', 'Employers'),
+		    ('/category/all', 'categories', 'Categories'),
+		    ('/login', 'login', 'Signup'),
 		    ('/login', 'login', 'Login'),
 			] -%}
 		{% set active_page = active_page|default('home') -%}
@@ -16,26 +15,29 @@
 {% else %}
 		{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
-		    ('/job/all', 'x', 'Jobs'),
-		    ('/employer/all', 'x', 'Employers'),
-		    ('/category/all', 'x', 'Categories'),
-		    ('/employer/new', 'x', 'New employer'),
-		    ('/category/new', 'x', 'New category'),
+		    ('/job/all', 'Jobs', 'Jobs'),
+		    ('/employer/all', 'employers', 'Employers'),
+		    ('/category/all', 'categories', 'Categories'),
+		    ('/employer/new', 'newEmployer', 'New employer'),
+		    ('/category/new', 'newCategory', 'New category'),
 		    ('/logout', 'logout', 'Logout'),
 			] -%}
 		{% set active_page = active_page|default('home') -%}
 {% endif %}
 
-	<div class="title">
-			<ul id="navigation" class="">
-				{% for href, id, caption in navigation_bar %}
-					  <li 	{% if id == active_page %} class="active"{% endif %}>
-					  	<a href="{{ href|e }}" class="nav-element">{{ caption|e }}</a>
-					  </li>
-				{% endfor %}
-			</ul>
-		</nav>
-	</div>
+<ul class="navigation">
+	{% for href, id, caption in navigation_bar %}
+		  <li 
 
-</div>
+		  	{% if id == active_page %} 
+		  		class="navigation-active" 
+		  	{% endif %}>
+
+		  	<a href="{{ href|e }}">
+		  		{{ caption|e }}
+		  	</a>
+
+		  </li>
+	{% endfor %}
+</ul>
 <!-- end navigation -->

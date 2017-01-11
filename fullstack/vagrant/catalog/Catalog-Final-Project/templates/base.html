@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='style.css') }}">
 	<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='default-smallscreen.css') }}">
 	<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='medium-screen.css') }}">
+	<link rel="stylesheet" type="text/css" href=" {{ url_for('static', filename='large-screen.css') }}">
 
 	<title></title>
 
@@ -24,6 +25,8 @@
 <body class="container">
 		
 		<!-- insert navigation -->
+		<!-- important, must pass active_page variable to navigation -->
+		{% set active_page = active_page %}
 		{% include "/navigation/navigation.html" %}
 
 		<!-- insert messages -->

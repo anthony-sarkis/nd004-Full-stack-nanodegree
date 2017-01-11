@@ -2,14 +2,19 @@
 {% set active_page = "TODO" %}
 {% block content %}
 
-<h1> Are you sure you want to delete {{employer.name}}? </h1>
+<h3 class="title"> Are you sure you want to delete {{employer.name}}? </h3>
 
-<form action="{{ url_for('routes.deleteEmployer', employer_id=employer_id)}}" method = 'post'>
+<div class="gallery">
+	<form action="{{ url_for('routes.deleteEmployer', employer_id=employer_id)}}" method = 'post'>
 
-	<input type='submit', value = 'Delete'>
+		<div class="buttonHolder">
 
-</form>
+			<input type='submit', value = 'Delete' class="cancelItemButton">
+			<a href = "{{ url_for('routes.viewEmployer', employer_id = employer_id)}}"> Cancel </a>
 
-<a href = "{{ url_for('routes.viewEmployer', employer_id = employer_id)}}"> Cancel </a>
+		</div>
+
+	</form>
+</div>
 
 {% endblock %}

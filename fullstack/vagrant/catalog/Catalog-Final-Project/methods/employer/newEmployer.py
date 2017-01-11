@@ -12,14 +12,18 @@ session = sessionMaker.newSession()
 def newEmployer():
     if request.method == 'POST':
         if permissions.LoggedIn() == True:
-            newEmployer = Employer(name=request.form['name'],
+            if request.form['name']:
+                newEmployer = Employer(name=request.form['name'],
                                    user_id=login_session['user_id'])
-            session.add(newEmployer)
-            session.commit()
-            flash("Welcome! Employer created.")
-            employer_id = newEmployer.id
-            return redirect(url_for('routes.viewEmployer',
-                                    employer_id=employer_id))
+                session.add(newEmployer)
+                session.commit()
+                flash("Welcome! Employer created.")
+                employer_id = newEmployer.id
+                return redirect(url_for('routes.viewEmployer',
+                                        employer_id=employer_id))
+            else:
+                flash("Name please")
+            return redirect(url_for('routes.newEmployer'))
         else:
             flash("Please login to create an employer")
             return redirect(url_for('routes.newEmployer'))

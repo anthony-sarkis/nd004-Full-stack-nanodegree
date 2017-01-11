@@ -16,14 +16,17 @@ def newCategory():
     # How can I use a try/except block better here?
     if permissions.LoggedIn() == True:
         if request.method == 'POST':
-            newCategory = Category(name=request.form['name'])
+            if request.form['name']:
+                newCategory = Category(name=request.form['name'])
 
-            session.add(newCategory)
-            session.commit()
+                session.add(newCategory)
+                session.commit()
 
-            flash("Category created")
-
-            return redirect(url_for('routes.viewCategoryAll'))
+                flash("Category created")
+                return redirect(url_for('routes.viewCategoryAll'))
+            else:
+                flash("Category please")
+                return render_template('/category/newCategory.html')
         else:
             return render_template('/category/newCategory.html')
     else:

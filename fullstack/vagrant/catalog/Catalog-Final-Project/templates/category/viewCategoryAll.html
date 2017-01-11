@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set active_page = "TODO" %}
+{% set active_page = "categories" %}
 {% block content %}
 
 <h1 class="gallery-title">All categories</h1>
@@ -14,10 +14,8 @@
 				</a>
 			</span>
 
-		<div class = ''>
-			<span class = 'category delete'>
-				<a href="{{url_for('routes.deleteCategory', category_id=i.id)}}"> Delete</a>
-			</span>
+		<div class = "buttonHolder">
+			<a class = "cancelItemButton" href="{{url_for('routes.deleteCategory', category_id=i.id)}}"> Delete</a>
 		</div>
 
 		</div>

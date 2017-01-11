@@ -7,14 +7,19 @@
 		</a>
 
 		<div class = ''>
+
 			<span class = 'salary'>
-			<p>{{job.salary}} </p>
+				<p>{{job.salary}} </p>
 			</span>
 
-			<span class = 'category'>
-			<p>{{job.employer.name}}</p>
-			</span>
+			<a href="{{ url_for('routes.viewEmployer', employer_id=job.employer.id)}}"> 
+				<h4>{{job.employer.name}}</h4>
+			</a>
 
+			<a href="{{ url_for('routes.viewCategory', category_id=job.category.id)}}"> 
+				<h4>{{job.category.name}}</h4>
+			</a>
+			
 			<div class="description">
 			<p>{{job.description}}</p>
 			</div>
