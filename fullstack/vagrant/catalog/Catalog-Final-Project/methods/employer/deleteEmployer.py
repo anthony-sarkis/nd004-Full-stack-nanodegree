@@ -30,7 +30,7 @@ def deleteEmployer(employer_id):
                 flash("Employer deleted.")
                 return redirect(url_for('routes.viewEmployerAll'))
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
     # get request
@@ -39,7 +39,7 @@ def deleteEmployer(employer_id):
             return render_template('/employer/deleteEmployer.html',
                                    employer_id=employer_id, employer=i)
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
 
