@@ -22,7 +22,7 @@ def editEmployer(employer_id):
                 return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
     # Get request
@@ -32,7 +32,7 @@ def editEmployer(employer_id):
                 '/employer/editEmployer.html', employer_id=employer_id,
                 employer=i)
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
 

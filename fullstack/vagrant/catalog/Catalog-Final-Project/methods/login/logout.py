@@ -6,16 +6,23 @@ from methods import routes
 
 @routes.route('/logout')
 def logout():
-    if login_session['provider_google'] == 'google':
-        gdisconnect.gdisconnect()
-        # This is an optimistic statement
-        # TODO Add a success condition check?
-        flash("Successfully logged out google.")
+    # Added Try/Except blocks to more smoothly handle variables not existing 
+    # (ie logged in facebook not google)
 
-    elif login_session['provider'] == 'facebook':
-        facebook.fbdisconnect()
-        flash("Successfully logged out facebook.")
-    else:
-        flash("Nothing to logout")
+    try:
+        if login_session['provider_google'] == 'google':
+            gdisconnect.gdisconnect()
+            # This is an optimistic statement
+            # TODO Add a success condition check?
+            flash("Successfully logged out google.")
+    except:
+        pass
+    
+    try:
+        if login_session['provider'] == 'facebook':
+            facebook.fbdisconnect()
+            flash("Successfully logged out facebook.")
+    except:
+        pass
 
     return redirect(url_for('routes.home'))

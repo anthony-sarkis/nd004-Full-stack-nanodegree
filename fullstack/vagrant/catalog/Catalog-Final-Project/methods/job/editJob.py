@@ -26,7 +26,7 @@ def editJob(employer_id, job_id):
                 return redirect(url_for('routes.viewEmployer',
                                         employer_id=employer_id))
         else:
-            flash("Please login")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
     else:
@@ -35,7 +35,7 @@ def editJob(employer_id, job_id):
                 '/job/editjob.html', employer_id=employer_id,
                 job_id=job_id, job=i, categories=categories)
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
 

@@ -30,14 +30,14 @@ def deleteJob(employer_id, job_id):
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
     else:
         if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
             return render_template('/job/deletejob.html', job=i)
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer', employer_id=employer_id))
 
 

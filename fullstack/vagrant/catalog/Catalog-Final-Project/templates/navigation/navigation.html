@@ -4,7 +4,7 @@
 	{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
 		    ('/job/all', 'Jobs', 'Jobs'),
-		    ('/employer/all', 'employers', 'Employers'),
+		    ('/employer/all', 'employers', 'All Employers'),
 		    ('/category/all', 'categories', 'Categories'),
 		    ('/login', 'login', 'Signup'),
 		    ('/login', 'login', 'Login'),
@@ -15,10 +15,11 @@
 {% else %}
 		{% set navigation_bar = [
 		    ('/', 'home', 'Home'),
-		    ('/job/all', 'Jobs', 'Jobs'),
-		    ('/employer/all', 'employers', 'Employers'),
-		    ('/category/all', 'categories', 'Categories'),
+		    ('/employer/all/my', 'employersMy', 'My Employers'),
+		    ('/employer/all', 'employers', 'All Employers'),
 		    ('/employer/new', 'newEmployer', 'New employer'),
+		    ('/job/all', 'Jobs', 'Jobs'),
+		    ('/category/all', 'categories', 'Categories'),
 		    ('/category/new', 'newCategory', 'New category'),
 		    ('/logout', 'logout', 'Logout'),
 			] -%}

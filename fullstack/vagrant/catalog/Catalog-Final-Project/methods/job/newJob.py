@@ -22,23 +22,31 @@ def newJob(employer_id):
 
     if request.method == 'POST':
         if permissions.EmployerAdminAndLoggedIn(employer_id) == True:
-            category = session.query(Category).filter_by(
-                name=request.form['category']).one()
+            if request.form['header'] and request.form['salary'] and request.form['description'] and request.form['category']:
+            
+                category = session.query(Category).filter_by(
+                    name=request.form['category']).one()
 
-            newItem = Job(
-                header=request.form['header'],
-                salary=request.form['salary'],
-                description=request.form['description'],
-                category_id=category.id,
-                employer_id=employer_id)
+                newItem = Job(
+                    header=request.form['header'],
+                    salary=request.form['salary'],
+                    description=request.form['description'],
+                    category_id=category.id,
+                    employer_id=employer_id)
 
-            session.add(newItem)
-            session.commit()
-            flash("Hip hip hooray! Job created.")
+                session.add(newItem)
+                session.commit()
+                flash("Hip hip hooray! Job created.")
 
-            return redirect(url_for('routes.viewJob', job_id=newItem.id))
+                return redirect(url_for('routes.viewJob', job_id=newItem.id))
+            else:
+                flash("Please complete all fields.")
+                # TODO save fields for user
+                return render_template(
+                '/job/newjob.html', employer_id=employer_id,
+                categories=categories)
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))
 
@@ -48,6 +56,6 @@ def newJob(employer_id):
                 '/job/newjob.html', employer_id=employer_id,
                 categories=categories)
         else:
-            flash("Please login.")
+            flash("You don't have permission to do this.")
             return redirect(url_for('routes.viewEmployer',
                                     employer_id=employer_id))

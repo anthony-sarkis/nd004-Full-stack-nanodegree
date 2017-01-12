@@ -2,11 +2,13 @@ from flask import Blueprint
 
 routes = Blueprint('routes', __name__)
 
-# CRUD Restruants
-from employer.viewEmployer import viewEmployer, viewEmployerAll, viewEmployerAllJSON, viewEmployerJSON, viewEmployerJobJSON
+# CRUD
+from employer.viewEmployer import viewEmployer, viewEmployerAll, viewEmployerAllMy
 from employer.deleteEmployer import deleteEmployer
 from employer.editEmployer import editEmployer
 from employer.newEmployer import newEmployer
+
+from employer.viewEmployerJSON import viewEmployerAllJSON, viewEmployerJSON, viewEmployerJobJSON
 
 from job.editJob import editJob
 from job.newJob import newJob

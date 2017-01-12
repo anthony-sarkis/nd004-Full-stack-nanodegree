@@ -101,6 +101,10 @@ def gconnect():
     if not user_id:
         userMethods.createUser(login_session)
 
+        # populate login_session with the user id for freshly created user.
+        user_id = userMethods.getUserID(login_session['email'])
+        login_session['user_id'] = user_id
+
     # important, flask need a return statement here otherwise get value
     # error...
     return "Complete"
