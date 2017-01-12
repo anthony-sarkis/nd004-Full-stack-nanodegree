@@ -62,8 +62,11 @@ def fbconnect():
 
     # see if user exists
     user_id = userMethods.getUserID(login_session['email'])
+    
     if not user_id:
-        user_id = userMethods.createUser(login_session)
+        userMethods.createUser(login_session)
+        user_id = userMethods.getUserID(login_session['email'])
+    
     login_session['user_id'] = user_id
 
     output = ''
@@ -90,5 +93,10 @@ def fbdisconnect():
     result = h.request(url, 'DELETE')[1]
 
     del login_session['access_token']
+    del login_session['user_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['provider']
+    del login_session['facebook_id']
 
     print result
