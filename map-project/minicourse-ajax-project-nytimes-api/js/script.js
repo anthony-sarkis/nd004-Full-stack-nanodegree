@@ -26,11 +26,13 @@ function loadData() {
     // load nytimes
 
     // NY TIMES data request
-    // Built by LucyBot. www.lucybot.com
+    // removed lucy bot as have customized it
+    // update apiy key with correct key 
+
     var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     url += '?' + $.param({
-      'api-key': "XXXXXXXXXXXXXXXXXXXXXXXXX",
-      'q': address
+      'api-key': "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      'q': cityStr
     });
 
     $.ajax({
@@ -38,16 +40,13 @@ function loadData() {
       method: 'GET',
     }).done(function(result) {
 
-      $nytHeaderElem.text('New York Times Articles About ' + address);
-
+      $nytHeaderElem.text('New York Times Articles About ' + cityStr);
       console.log(result);
-
       articles = result.response.docs;
 
       for (var i = 0; i < articles.length; i++) {
         
         var x = articles[i];
-
         $nytElem.append('<ul id="nytimes-articles">'+ 
          '<a href="'+x.web_url+'">'
          + x.headline.main + '</a>'+
@@ -63,6 +62,48 @@ function loadData() {
 
     });
 
+
+    // wikipedia
+
+    var wiki_url = "https://en.wikipedia.org/w/api.php";
+    wiki_url += '?' + $.param({
+      'action': "opensearch",
+      'search': cityStr,
+      'format': "json",
+      'callback': "wikiCallback"
+    });
+
+    console.log(wiki_url);
+
+    var wikiRequestTimeout = setTimeout(function() {
+        $wikiElem.text('Wikipedia articles could not be loaded.');
+    }, 4000);
+
+    $.ajax({
+      url: wiki_url,
+      dataType: "jsonp",
+      method: 'GET',
+    }).done(function(result) {
+
+      console.log(result);
+
+      var articles = result[1];
+      for (var i = 0; i < articles.length; i++) {
+        
+        articleString = articles[i]
+
+        var wiki_url =  'https://en.wikipedia.org/wiki/'
+        var this_url = wiki_url+articleString;
+
+        $wikiElem.append(
+        '<li id="wikipedia-links">'
+        +'<a href="'+ this_url +'">'+articleString+
+        '</a></li>');
+      };
+
+    clearTimeout(wikiRequestTimeout);
+
+    });
 
 
     return false;
