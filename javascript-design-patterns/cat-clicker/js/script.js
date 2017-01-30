@@ -1,9 +1,11 @@
 
-// BuildCat and countCat are helper functions
-// used by showCat and showCatAll
-// buildCatList builds a list of links for use by showCat
+/* 
 
-// Model View Controller layout
+  Purpose: Start program and run primary function, showCat
+  Input: Model, Octopus, View
+  Returns: Website with cat clicker
+
+*/
 
 $(function(){
 
@@ -110,22 +112,17 @@ $(function(){
 
       */
       countCat: function(catName) {
-
-        var $catOutput = $('#'+catName+'Output');
-        $catOutput.text(catName);
-        var $catName = $(catName);
         
-        // get catCount object from storage
-        // console.log(catName)
         var cat = model.getCat(catName);
-        console.log("count cat =", cat.Name)
+        console.log(cat.Count)
+
+        var $catOutput = $("#"+catName+"Output");
         $catOutput.text(catName + " " + cat.Count);
 
-        $('#'+cat.Name).click(function(e) {
+        $("#"+catName+"Image").click(function(e) {
 
           console.log(catName, "Clicked")            
           cat.Count = cat.Count + 1
-        
           $catOutput.text(catName + " " + cat.Count);
 
           model.updateCat({
@@ -135,39 +132,28 @@ $(function(){
         });
       },
 
+      /* 
+
+        Purpose: Show a cat and count it's clicks
+        Input: Starts on click of a cat in cat list
+        Returns: Cat and cat counter.
+
+      */
+
       showCat: function() {
         
-        cat = window.location.hash
-        // remove #. Credit to http://stackoverflow.com/questions/3552944/
-        var catIndex = cat.indexOf("#")
-        var catName = catIndex != -1 ? cat.substring(catIndex+1) : "";
-
-
-        console.log(cat)
-
-        // get first cat
-        var $cat = $(catName);
-        var $catName = $(catName);
-        
-        console.log(catName)
-        // get catCount object from storage
-        // console.log(catName)
-        var cat = model.getCat(catName);
-        view.buildCat(catName);
-
         $(document).click(function(e) {
 
-          if(true) {
+          parantNodeId = e.target.parentNode.id
+          if(parantNodeId == 'cat-list') {
             
             var cat = $(e.target).text();
             console.log(cat)
 
-            view.buildCat(cat);
+            view.renderCat(cat);
+            octopus.countCat(cat);
           };
-
         });
-
-        octopus.countCat(catName);
       },
 
       init: function() {
@@ -182,17 +168,34 @@ $(function(){
         view.buildCatList()
       },
 
-        // Builds cat HTML tags
-      buildCat: function(catName) {
+      /* 
+
+        Purpose: Render visual of cat
+        Input: The cat's name catName
+        Returns: Cat in html
+
+      */
+
+      renderCat: function(catName) {
           
           var cat = model.getCat(catName);
-          //console.log("build cat =", cat.Name)
+          
+          // clear old cat
+          $('#cats').find('p').first().remove();
+          $('#cats').find('img').first().remove(); 
 
           $('<p>').attr('id', catName+"Output").appendTo('#cats').html('a');
-          $('<img>').attr('src', catName+".jpg").attr('id', catName).appendTo('#cats');
+          $('<img>').attr('src', catName+".jpg").attr('id', catName+"Image").appendTo('#cats');
       },
 
-      // Builds cat list
+      /* 
+
+        Purpose: Render visual of cat list.
+        Input: Data from model.
+        Returns: HTML cat list.
+
+      */
+
       buildCatList: function() {
         // run through list of cats
         var Cats = model.getCatAll();
@@ -201,19 +204,14 @@ $(function(){
           // get cat name from list
           if (Cats.hasOwnProperty(cat)) {
             cat = Cats[cat]
-            // console.log(cat.Name + "=" + cat.Count)
-            // create list tag
-            var li = $('<li>')
-            // create link
-            var node =  $('<a>').attr('href', "#"+cat.Name).html(cat.Name);
-            // put link inside list and append to cat list div
-            li.append(node).appendTo('#cat-list');
+            var li = $('<li>').attr('id', cat.Name).html(cat.Name)
+            li.appendTo('#cat-list');
           }
         };
       }
     };
 
     octopus.init();
-    octopus.showCat()
+    octopus.showCat();
 
 });
