@@ -13,22 +13,25 @@ $(function(){
         cats = [
           {
             // TODO ADD ID  will also fix space handling
-
+            ID: 1,
             Name: 'Whiskers',
             ImageURL: 'Whiskers.jpg',
             Count: 0
           },
           {
+            ID: 2,
             Name: 'Symba',
             ImageURL: 'Symba.jpg',
             Count: 0
           },
           {
+            ID: 3,
             Name: 'Kitty',
             ImageURL: 'Kitty.jpg',
             Count: 0
           },
           {
+            ID: 4,
             Name: 'Kittya',
             ImageURL: 'Kitty.jpg',
             Count: 0
@@ -59,14 +62,14 @@ $(function(){
 
         // Update cat
         for (key in Cats) {
-          if (originalCat.Name == Cats[key].Name) {
+          if (originalCat.ID == Cats[key].ID) {
               Cats[key] = originalCat
           }
         }
 
         localStorage.cats = JSON.stringify(Cats);
-        localStorage.currentCat = cat.Name;
-        console.log('local storage update', localStorage.currentCat)
+        localStorage.currentCat = originalCat.ID;
+        // console.log('local storage update', localStorage.currentCat)
       },
 
       /* 
@@ -82,16 +85,17 @@ $(function(){
         var originalCat = model.getCat(cat);
         console.log("original cat", originalCat)
         cat.Count = Number(cat.Count)
+        cat.ID = originalCat.ID
 
         // Update cat
         for (key in Cats) {
-          if (originalCat.Name == Cats[key].Name) {
+          if (originalCat.ID == Cats[key].ID) {
               Cats[key] = cat
           }
         }
 
         localStorage.cats = JSON.stringify(Cats);
-        localStorage.currentCat = cat.Name;
+        localStorage.currentCat = cat.ID;
         console.log('local storage update', localStorage.currentCat)
       },
       
@@ -108,24 +112,25 @@ $(function(){
 
       /* 
         Purpose: Get single cat object.
-        Input: Name of the cat, as a string. ie "Whiskers"
+        Input: ID of the cat, ie 2
         Returns: Cat object from local storage.
       */
-      getCat: function(catName) {
+      getCat: function(catID) {
 
         var Cats = JSON.parse(localStorage.cats);
         for (aCat in Cats) {
           // get cat name from list
-          if (Cats.hasOwnProperty(aCat)) {
-            if (catName ==  Cats[aCat].Name) {
+          if (Cats.hasOwnProperty(aCat)){
+            if (catID == Cats[aCat].ID){
+              console.log('')
               cat = Cats[aCat]
-              //console.log(cat)
+              console.log(cat)
             }
           };
         }
 
-        localStorage.currentCat = cat.Name;
-        console.log('local storage update', cat.Name)
+        localStorage.currentCat = cat.ID;
+        // console.log('local storage updated', localStorage.currentCat)
 
         return cat;
       },
@@ -133,8 +138,8 @@ $(function(){
 
       getCurrentCat: function() {
         var currentCat = localStorage.currentCat;
-        console.log("cat from storage", currentCat)
-        return currentCat;
+        // console.log("cat from storage", currentCat)
+        return currentCat;  // returns cat ID
       }
     };
     
@@ -147,18 +152,16 @@ $(function(){
       */
       countCat: function() {
         
-        console.log("Ran count cat start")
-
+        // console.log("Ran count cat start")
         var currentCat = model.getCurrentCat();
         var cat = model.getCat(currentCat);
-        console.log(cat.Count)
+        //console.log(cat.Count)
 
         var $catOutput = $("#"+cat.Name+"Output");
         $catOutput.text(cat.Name + " " + cat.Count);
 
         $("#"+cat.Name+"Image").click(function(e) {
 
-          console.log("Ran count cat click event")
           console.log(cat.Name, "Clicked")            
           cat.Count = cat.Count + 1
           $catOutput.text(cat.Name + " " + cat.Count);
@@ -176,7 +179,7 @@ $(function(){
         Input: Form data from Admin
         Returns: Updated cat in local storage
       */
-      saveCat: function(catName) {
+      saveCat: function(catID) {
         
         $('form').bind('submit', function (event) {
           console.log("Save Clicked");
@@ -208,10 +211,15 @@ $(function(){
         $('#cat-list').click(function(e) {
 
           parantNodeId = e.target.parentNode.id
+          // console.log(parantNodeId)
+          
           if(parantNodeId == 'cat-list') {
             
-            var catName = $(e.target).text();
-            var cat = model.getCat(catName);
+            // way to get ID 
+            var catID = e.target.id;
+            console.log('cat ID', catID)
+
+            var cat = model.getCat(catID);
 
             view.runCats();
           };
@@ -240,9 +248,9 @@ $(function(){
       renderCat: function() {
         
         var currentCat = model.getCurrentCat();
-        console.log(currentCat)  
+        //console.log(currentCat)  
         var cat = model.getCat(currentCat);
-        console.log(cat) 
+        //console.log(cat) 
         // clear old cat
         // TO DO update logic to be use replaceWith function
         $('#cats').find('p').first().remove();
@@ -278,7 +286,7 @@ $(function(){
           
           if (inputType !== "SUBMIT") {
               
-              console.log(this.name)
+              // console.log(this.name)
               $('').replaceWith($("input[name='"+this.name+"']").attr('value', fillForm[selectACat]));
               selectACat++;
 
@@ -305,7 +313,7 @@ $(function(){
           // get cat name from list
           if (Cats.hasOwnProperty(cat)) {
             cat = Cats[cat]
-            var li = $('<li>').attr('id', cat.Name).html(cat.Name)
+            var li = $('<li>').attr('id', cat.ID).html(cat.Name)
             li.appendTo('#cat-list');
             
             // $('#cat-list').replaceWith($('<li>').attr('id', cat.Name).html(cat.Name));
@@ -313,13 +321,19 @@ $(function(){
         };
       },
 
-      // reveiwed with Yashwanth and ok
-      // except to explore $(document) .ready
+      /* old way
       runCats: function() {
           window.setTimeout(view.renderCat(),500);
           window.setTimeout(view.buildCatList(),500);
           window.setTimeout(octopus.countCat(),500);
           window.setTimeout(view.renderAdmin(),500);
+      },
+      */
+      runCats: function() {
+          view.renderCat();
+          view.buildCatList();
+          octopus.countCat();
+          view.renderAdmin();
       },
 
     };
@@ -328,6 +342,6 @@ $(function(){
     // place document .ready here to avoid using timeout statements
     octopus.init();
     octopus.showCat();
-    view.runCats();
+    $(view.runCats())
 
 });
