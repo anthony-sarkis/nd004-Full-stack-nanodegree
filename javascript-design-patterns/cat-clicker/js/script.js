@@ -1,20 +1,19 @@
 
 /* 
-
   Purpose: Start program and run primary function, showCat
   Input: Model, Octopus, View
   Returns: Website with cat clicker
-
 */
 
 $(function(){
 
     var model = {
-      
       init: function () {
         currentCat = null,
         cats = [
           {
+            // TODO ADD ID  will also fix space handling
+
             Name: 'Whiskers',
             ImageURL: 'Whiskers.jpg',
             Count: 0
@@ -28,35 +27,35 @@ $(function(){
             Name: 'Kitty',
             ImageURL: 'Kitty.jpg',
             Count: 0
+          },
+          {
+            Name: 'Kittya',
+            ImageURL: 'Kitty.jpg',
+            Count: 0
           }
               ]
 
-        // push local storage if doesn't already exist
+      // push local storage if doesn't already exist
       if (!localStorage.cats) {
             localStorage.cats = JSON.stringify(cats);
             localStorage.currentCat = currentCat;
         } 
       },        
       
-      /* 
 
+      /* 
         Purpose: Updates Cats array of objects in local storage
         Input: Cat object with variable updates
         Returns: None.
-
       */
       updateCat: function(cat) {
         
-        // get cats
         var catToBeUpdated = cat
         var Cats = model.getCatAll();
         var originalCat = model.getCat(catToBeUpdated);
-        console.log("original cat", originalCat)
+        // console.log("original cat", originalCat)
 
         originalCat.Count = Number(catToBeUpdated.Count)
-          
-        //console.log(catToBeUpdated.Count)
-        //console.log(Number(catToBeUpdated.Count))
 
         // Update cat
         for (key in Cats) {
@@ -66,41 +65,41 @@ $(function(){
         }
 
         localStorage.cats = JSON.stringify(Cats);
+        localStorage.currentCat = cat.Name;
+        console.log('local storage update', localStorage.currentCat)
       },
 
-            /* 
-
+      /* 
         Purpose: Updates Cats array of objects in local storage
         Input: Cat object with variable updates
         Returns: None.
-
       */
+
       updateCatAll: function(cat) {
         
-        // get cats
-        var catToBeUpdated = cat
+        console.log(cat)
         var Cats = model.getCatAll();
-        var originalCat = model.getCat(catToBeUpdated);
+        var originalCat = model.getCat(cat);
         console.log("original cat", originalCat)
-
-        catToBeUpdated.Count = Number(catToBeUpdated.Count)
+        cat.Count = Number(cat.Count)
 
         // Update cat
         for (key in Cats) {
           if (originalCat.Name == Cats[key].Name) {
-              Cats[key] = catToBeUpdated
+              Cats[key] = cat
           }
         }
 
         localStorage.cats = JSON.stringify(Cats);
+        localStorage.currentCat = cat.Name;
+        console.log('local storage update', localStorage.currentCat)
       },
       
-      /* 
 
+      /* 
         Purpose: Get all cats
         Input: None.
         Returns: Cats, an array of cat objects.
-
       */
       getCatAll: function() {
         var Cats = JSON.parse(localStorage.cats);
@@ -108,11 +107,9 @@ $(function(){
       },  
 
       /* 
-
         Purpose: Get single cat object.
         Input: Name of the cat, as a string. ie "Whiskers"
         Returns: Cat object from local storage.
-
       */
       getCat: function(catName) {
 
@@ -127,45 +124,44 @@ $(function(){
           };
         }
 
-        localStorage.currentCat = catName;
-        console.log('local storage update', localStorage.currentCat)
+        localStorage.currentCat = cat.Name;
+        console.log('local storage update', cat.Name)
 
         return cat;
       },
 
 
       getCurrentCat: function() {
-
         var currentCat = localStorage.currentCat;
         console.log("cat from storage", currentCat)
         return currentCat;
-
       }
     };
     
 
     var octopus = {
-      
-      /* 
-
+      /*
         Purpose: Count number of times cat clicked.
         Input: Name of the cat, as a string. ie "Whiskers"
         Returns: None.
-
       */
-      countCat: function(catName) {
+      countCat: function() {
         
-        var cat = model.getCat(catName);
+        console.log("Ran count cat start")
+
+        var currentCat = model.getCurrentCat();
+        var cat = model.getCat(currentCat);
         console.log(cat.Count)
 
-        var $catOutput = $("#"+catName+"Output");
-        $catOutput.text(catName + " " + cat.Count);
+        var $catOutput = $("#"+cat.Name+"Output");
+        $catOutput.text(cat.Name + " " + cat.Count);
 
-        $("#"+catName+"Image").click(function(e) {
+        $("#"+cat.Name+"Image").click(function(e) {
 
-          console.log(catName, "Clicked")            
+          console.log("Ran count cat click event")
+          console.log(cat.Name, "Clicked")            
           cat.Count = cat.Count + 1
-          $catOutput.text(catName + " " + cat.Count);
+          $catOutput.text(cat.Name + " " + cat.Count);
 
           model.updateCat({
                 Name: cat.Name,
@@ -176,42 +172,37 @@ $(function(){
 
 
       /* 
-
         Purpose: Save cat
         Input: Form data from Admin
         Returns: Updated cat in local storage
-
       */
-
       saveCat: function(catName) {
         
         $('form').bind('submit', function (event) {
-
+          console.log("Save Clicked");
           event.preventDefault(); // using this page stop being refreshing
 
           // credit http://stackoverflow.com/questions/169506/obtain-form-input-fields-using-jquery
           var result = { };
+
           $.each($('form').serializeArray(), function() {
               result[this.name] = this.value;
           });
 
           console.log(result);
-          
           model.updateCatAll(result);
 
-          console.log("Save Clicked");        
+          view.runCats();
 
         });
       },
 
-      /* 
 
+      /* 
         Purpose: Show a cat and count it's clicks
         Input: Starts on click of a cat in cat list
         Returns: Cat and cat counter.
-
       */
-
       showCat: function() {
         
         $('#cat-list').click(function(e) {
@@ -222,10 +213,7 @@ $(function(){
             var catName = $(e.target).text();
             var cat = model.getCat(catName);
 
-            view.renderCat(catName);
-            octopus.countCat(catName);
-            view.renderAdmin(catName);
-
+            view.runCats();
           };
         });
       },
@@ -233,7 +221,7 @@ $(function(){
 
       init: function() {
         model.init()
-        view.init()        
+        view.init()       
       }
     };
 
@@ -245,36 +233,34 @@ $(function(){
       },
 
       /* 
-
         Purpose: Render visual of cat
         Input: The cat's name catName
         Returns: Cat in html
-
       */
-
-      renderCat: function(catName) {
-          
-        var cat = model.getCat(catName);
+      renderCat: function() {
+        
+        var currentCat = model.getCurrentCat();
+        console.log(currentCat)  
+        var cat = model.getCat(currentCat);
+        console.log(cat) 
         // clear old cat
         // TO DO update logic to be use replaceWith function
         $('#cats').find('p').first().remove();
         $('#cats').find('img').first().remove();
-        $('<p>').attr('id', catName+"Output").appendTo('#cats').html('a');
-        $('<img>').attr('src', cat.ImageURL).attr('id', catName+"Image").appendTo('#cats');
+        $('<p>').attr('id', cat.Name+"Output").appendTo('#cats').html('a');
+        $('<img>').attr('src', cat.ImageURL).attr('id', cat.Name+"Image").appendTo('#cats');
 
       },
 
       /* 
-
         Purpose: Render Admin form
         Input: 
         Returns: 
-
       */
-
-      renderAdmin: function(catName) {
+      renderAdmin: function() {
         
-        var cat = model.getCat(catName); 
+        var currentCat = model.getCurrentCat();
+        var cat = model.getCat(currentCat); 
         var selectACat = 0;
         var fillForm = [];
         fillForm.push(cat.Name, cat.ImageURL, cat.Count);
@@ -299,18 +285,15 @@ $(function(){
           }
         });
 
-        octopus.saveCat(cat.Name);
+        octopus.saveCat(cat.Name);        
       },
 
 
       /* 
-
         Purpose: Render visual of cat list.
         Input: Data from model.
         Returns: HTML cat list.
-
       */
-
       buildCatList: function() {
         
         $('#cat-list').find('li').remove();
@@ -328,16 +311,23 @@ $(function(){
             // $('#cat-list').replaceWith($('<li>').attr('id', cat.Name).html(cat.Name));
           }
         };
-      }
+      },
 
+      // reveiwed with Yashwanth and ok
+      // except to explore $(document) .ready
+      runCats: function() {
+          window.setTimeout(view.renderCat(),500);
+          window.setTimeout(view.buildCatList(),500);
+          window.setTimeout(octopus.countCat(),500);
+          window.setTimeout(view.renderAdmin(),500);
+      },
 
     };
 
+
+    // place document .ready here to avoid using timeout statements
     octopus.init();
     octopus.showCat();
-
-    // view.renderCat();
-    // octopus.countCat();
-    // view.renderAdmin();
+    view.runCats();
 
 });
