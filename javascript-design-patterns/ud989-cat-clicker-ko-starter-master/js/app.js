@@ -1,12 +1,27 @@
-var viewModel = function() {
-	this.clickCount = ko.observable(0);
-	this.name = ko.observable('Tabby');
-	this.imgSrc = ko.observable('https://drivecarma.ca/assets/img/product/logo/logo-red.png');
-	this.imgAttribution = ko.observable('https://xyz');
+var initialCats = [
+	{
+		clickCount: 0,
+		name: 'Tabby',
+		imgSrc: 'https://drivecarma.ca/assets/img/product/logo/logo-red.png',
+		imgAttribution: 'xyz',
+		nicknames: ['Kitty', 'Kat', 'Whiskers']
+	},
+	{
+		clickCount: 0,
+		name: 'Kitty',
+		imgSrc: 'https://drivecarma.ca/assets/img/product/logo/logo-red.png',
+		imgAttribution: 'xyz',
+		nicknames: ['Kitty', 'Kat', 'Whiskers']
+	}
+];
 
-	this.incrementCounter = function() {
-		this.clickCount(this.clickCount() + 1);
-	};
+
+var Cat = function(data) {
+	this.clickCount = ko.observable(data.clickCount);
+	this.name = ko.observable(data.name);
+	this.imgSrc = ko.observable(data.imgSrc);
+	this.imgAttribution = ko.observable(data.imgAttribution);
+	this.nicknames = ko.observable(data.nicknames);
 
 	this.labelName = ko.observable(null);
 	this.labelVisible = ko.computed(function() {
@@ -27,13 +42,35 @@ var viewModel = function() {
 
 	}, this);
 
-
 	this.headLine = ko.computed(function() {
 		return this.name() + " " + this.clickCount()
 	}, this);
 
-
 }
+
+
+var viewModel = function() {
+	
+	// self maps to viewModel
+	var self = this;
+
+	this.catList = ko.observableArray([]);
+
+	initialCats.forEach(function(catItem) {
+		self.catList.push( new Cat(catItem) );
+	});
+
+	this.currentCat = ko.observable( this.catList()[0] ) ;
+
+	this.changeCat = function(ClickedCat) {
+		self.currentCat(ClickedCat);
+	}
+
+	this.incrementCounter = function() {
+		self.currentCat().clickCount(self.currentCat().clickCount() + 1);
+	};
+}
+
 
 ko.applyBindings(new viewModel() );
 
