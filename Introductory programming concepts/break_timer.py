@@ -18,13 +18,15 @@ for x in range (0, 3):
     webbrowser.open("http://stackoverflow.com/questions/6318156/adding-python-path-on-windows-7")
 """
 
-total_breaks = 3
+total_breaks = 30
 break_count = 0
-wait_time = 7200
+wait_time = 1800 * 1.5
 
-print("This program started on "+time.ctime())
+print("This program started on " + time.ctime())
+# Test
+# webbrowser.open("https://www.youtube.com/watch?v=Odeys-B-ViY")
 
 while(break_count < total_breaks):
     time.sleep(wait_time)
-    webbrowser.open("http://stackoverflow.com/questions/6318156/adding-python-path-on-windows-7")
+    webbrowser.open("https://www.youtube.com/watch?v=Odeys-B-ViY")
     break_count = break_count + 1
