@@ -1,5 +1,5 @@
 
-Documentation for Restaurant Catalog Project
+Documentation for Employment Catalog Project
 -------------
 Release v0.1 on January 2016
 
