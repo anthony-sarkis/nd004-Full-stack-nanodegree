@@ -2,11 +2,7 @@
 node_modules
 .npm-debug.log
 tmp
-fullstack/vagrant/catalog/client_secrets.json
-fullstack/vagrant/catalog/fb_client_secrets.json
-fullstack/vagrant/catalog/Catalog-Final-Project/methods/login/client_secrets.json
-fullstack/vagrant/catalog/Catalog-Final-Project/methods/login/fb_client_secrets.json
-fullstack/vagrant/catalog/Restaurant-catalog-mini-project/client_secrets.json
-fullstack/vagrant/catalog/Restaurant-catalog-mini-project/fb_client_secrets.json
+/methods/login/client_secrets.json
+/methods/fb_client_secrets.json
 fullstack/vagrant/.vagrant/machines/default/virtualbox/id
 fullstack/vagrant/.vagrant/machines/default/virtualbox/private_key
