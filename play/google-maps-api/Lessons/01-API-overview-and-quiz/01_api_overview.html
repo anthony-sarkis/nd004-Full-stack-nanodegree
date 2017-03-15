@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>API Overview</title>
+
+	<style>
+
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#a_map {
+			height: 75%;
+			width: 75%;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div id="a_map"></div>
+
+	<script>
+		
+		var foo_map;
+
+		function startMap() {
+			// Creates a new map
+
+			foo_map = new google.maps.Map(document.getElementById('a_map'), {
+				center: {lat: 40.1234567, lng: -74.1234567},
+				zoom: 12
+			});
+		}
+
+	</script>
+
+	<script async defer 
+	src="https://maps.googleapis.com/maps/api/js?key=XXXXXX&v=3&callback=startMap">
+	</script>
+
+</body>
+</html>
