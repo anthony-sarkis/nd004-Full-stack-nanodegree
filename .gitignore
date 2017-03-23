@@ -6,3 +6,4 @@ tmp
 /methods/fb_client_secrets.json
 fullstack/vagrant/.vagrant/machines/default/virtualbox/id
 fullstack/vagrant/.vagrant/machines/default/virtualbox/private_key
+.vagrant/
